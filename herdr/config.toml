@@ -1,0 +1,28 @@
+onboarding = false
+# ~/.config/herdr/config.toml — Herdr TUI (`herdr` / `hd`)
+#
+# Key bindings are Herdr's DEFAULTS, untouched (prefix Ctrl-b; Ctrl-b ? lists
+# them all). This file only changes looks.
+#
+# Full defaults:  herdr --default-config
+# Check edits:    herdr config check
+# Apply live:     herdr server reload-config
+# Cheat sheet (in a shell): hdkeys
+
+[theme]
+# Catppuccin Latte by day, Mocha by night — follows macOS appearance,
+# same as Ghostty, Neovim and tmux.
+auto_switch = true
+light_name = "catppuccin-latte"
+dark_name = "catppuccin"
+
+[ui]
+sidebar_width = 30
+status_indicators = "symbols"
+# Tabs live at the bottom, like the tmux status bar and nvim lualine.
+tab_bar_position = "bottom"
+tab_bar_right = [{ type = "zoom" }, { type = "datetime" }]
+tab_bar_right_separator = " │ "
+
+[ui.toast]
+delivery = "herdr"

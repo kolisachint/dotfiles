@@ -1,0 +1,93 @@
+HERDR TUI KEYS — stock defaults   (q closes this)
+=================================================
+
+PREFIX = Ctrl-b : press it, let go, then the key.
+Ctrl-b ?  lists every key ( / to filter ).
+The mouse works for everything: click, drag, right-click.
+
+
+START / LEAVE  (in Ghostty)
+---------------------------
+  hd            open Herdr (or come back to it)
+                Theme follows macOS light/dark by itself.
+  Ctrl-b q      detach: agents keep running
+  herdr server stop     stop everything
+
+
+LEARN THESE 8 FIRST
+-------------------
+  v             split right
+  -             split down
+  h j k l       move between panes
+  z             zoom pane / unzoom
+  c             new tab
+  g             go to any agent
+  ?             every key
+  q             detach
+
+
+SEE ALL AGENTS
+--------------
+  g             Go-to picker: every agent, by project
+                  / search    Enter jump
+                  b blocked   w working
+                  i idle      d done     a all
+  w             workspace navigation
+  b             show / hide sidebar
+  o             jump to latest notification
+
+
+PANES
+-----
+  v   -         split right / down
+  h j k l       move to pane
+  Tab           next pane   (Shift-Tab: previous)
+  H J K L       swap pane (Shift + h j k l)
+  z             zoom / unzoom
+  r             resize mode
+  x             close pane
+  P             rename pane
+  e             open scrollback in editor
+
+
+TABS
+----
+  c             new tab
+  n / p         next / previous tab
+  1 … 9         go to tab
+  T             rename tab
+  X             close tab
+
+
+WORKSPACES  (one per project)
+-----------------------------
+  N             new workspace
+  W             rename workspace
+  D             close workspace
+  G             new git worktree
+
+
+SCROLL / COPY
+-------------
+  [             copy mode
+                  h j k l / PgUp  move
+                  /  or  ?        search
+                  v  then  y      select, copy
+                  q               leave
+  Drag with the mouse to copy.
+
+
+WORKFLOW 2: CHANGES  (shell commands, not keys)
+-----------------------------------------------
+  v  then  dw   live changed files + diff beside agent
+                  Ctrl-c to stop
+  v  then  vd   full diff in nvim
+                  Tab / Shift-Tab  next / prev file
+                  ]c / [c          next / prev change
+                  :qa              quit
+
+
+OTHER
+-----
+  s             settings
+  R             reload config

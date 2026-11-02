@@ -1,0 +1,13 @@
+# ~/.config/git/config — git reads this XDG path natively (no ~/.gitconfig).
+# Email is GitHub's private noreply address, so the real one never lands in history.
+[user]
+	name = Sachin Koli
+	email = 39264878+kolisachint@users.noreply.github.com
+[init]
+	defaultBranch = main
+[core]
+	excludesFile = ~/.config/git/ignore
+[pull]
+	rebase = false
+[push]
+	autoSetupRemote = true

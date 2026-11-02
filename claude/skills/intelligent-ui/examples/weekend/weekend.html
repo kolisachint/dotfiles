@@ -1,0 +1,429 @@
+<title>Weekend Getaway</title>
+<style>
+:root { --tint-l: #0f7b6c; --tint-d: #5fd3b8; }
+.stop-note { margin: 0; line-height: 1.4; }
+.pl-note { width: 100%; min-height: 96px; font: inherit; font-size: 16px; color: inherit; background: transparent; border: 0; outline: none; resize: vertical; }
+.pk-add { display: flex; gap: 8px; align-items: center; }
+.pk-add .search { flex: 1; }
+.summary .v { font-size: 17px; }
+.bottom-bar a.btn { text-decoration: none; }
+.trip-top { display: flex; flex-direction: column; gap: 16px; }
+.picks { display: flex; flex-direction: column; gap: 2px; }
+</style>
+
+<div class="app">
+
+  <!-- ========== TRIP ========== -->
+  <section class="screen" id="trip" data-title="Trip">
+    <header class="nav">
+      <div class="nav-l"><button class="nav-btn" data-edit="stops">Edit</button></div>
+      <div class="nav-title"></div>
+      <div class="nav-r">
+        <button class="nav-btn" data-sheet="iui-md" aria-label="Plan file (Markdown)"><svg class="i"><use href="#i-list"/></svg></button>
+        <button class="nav-btn" data-sheet="add" aria-label="Add a place"><svg class="i"><use href="#i-plus"/></svg></button>
+      </div>
+    </header>
+    <div class="title-block"><p class="eyebrow" id="trip-eyebrow"></p><h1 class="large-title" id="trip-title">Weekend Getaway</h1></div>
+    <div class="content trip-top" id="trip-top"></div>
+    <div class="content">
+      <figure class="paper map" id="map" aria-label="Route map with stop pins"></figure>
+    </div>
+    <div class="content" id="trip-body"></div>
+    <div class="bottom-bar">
+      <a class="btn gray" id="route-link" target="_blank" rel="noopener" href="https://www.google.com/maps">Route in Maps</a>
+      <button class="btn" data-sheet="add">Add place</button>
+    </div>
+  </section>
+
+  <!-- ========== STAY & EAT ========== -->
+  <section class="screen" id="eat" data-title="Stay &amp; Eat" hidden>
+    <header class="nav">
+      <div class="nav-l"></div><div class="nav-title"></div>
+      <div class="nav-r"><button class="nav-btn" data-sheet="iui-md" aria-label="Plan file (Markdown)"><svg class="i"><use href="#i-list"/></svg></button></div>
+    </header>
+    <div class="title-block"><p class="eyebrow">Tap to pick · map icon to search</p><h1 class="large-title">Stay &amp; Eat</h1></div>
+    <div class="content" id="eat-body"></div>
+  </section>
+
+  <!-- ========== PACKING ========== -->
+  <section class="screen" id="pack" data-title="Packing" hidden>
+    <header class="nav">
+      <div class="nav-l"><button class="nav-btn" data-clear-done>Clear done</button></div><div class="nav-title"></div>
+      <div class="nav-r"><button class="nav-btn" data-sheet="iui-md" aria-label="Plan file (Markdown)"><svg class="i"><use href="#i-list"/></svg></button></div>
+    </header>
+    <div class="title-block"><p class="eyebrow">Tick as you pack</p><h1 class="large-title">Packing</h1></div>
+    <div class="content">
+      <form class="pk-add" id="pk-form" autocomplete="off">
+        <label class="search"><svg class="i sm"><use href="#i-plus"/></svg><input type="text" id="pk-new" aria-label="Add a packing item" placeholder="Add an item"></label>
+      </form>
+    </div>
+    <div class="content" id="pack-body"></div>
+  </section>
+
+  <!-- ========== IDEAS ========== -->
+  <section class="screen" id="ideas" data-title="Ideas" hidden>
+    <header class="nav">
+      <div class="nav-l"></div><div class="nav-title"></div>
+      <div class="nav-r"><button class="nav-btn" data-sheet="iui-md" aria-label="Plan file (Markdown)"><svg class="i"><use href="#i-list"/></svg></button></div>
+    </header>
+    <div class="title-block"><p class="eyebrow">Pick a vibe · tap to add</p><h1 class="large-title">Ideas</h1></div>
+    <div class="content">
+      <label class="search"><svg class="i sm"><use href="#i-search"/></svg><input type="search" id="id-q" aria-label="Search ideas" placeholder="Search ideas"></label>
+    </div>
+    <div class="content" id="ideas-body"></div>
+  </section>
+
+  <!-- ========== STOP DETAIL (pushed) ========== -->
+  <section class="screen" id="place" data-hide-tabbar hidden>
+    <header class="nav">
+      <div class="nav-l"><button class="nav-btn" data-back><svg class="i"><use href="#i-chevron-left"/></svg><span class="back-label">Back</span></button></div>
+      <div class="nav-title"></div><div class="nav-r"></div>
+    </header>
+    <div id="place-body"></div>
+  </section>
+
+  <nav class="tabbar" aria-label="Sections">
+    <button class="tab" data-tab="trip"><svg class="i"><use href="#i-map"/></svg><span>Trip</span></button>
+    <button class="tab" data-tab="eat"><svg class="i"><use href="#i-bed"/></svg><span>Stay &amp; Eat</span></button>
+    <button class="tab" data-tab="pack"><svg class="i"><use href="#i-check-list"/></svg><span>Packing</span></button>
+    <button class="tab" data-tab="ideas"><svg class="i"><use href="#i-sparkle"/></svg><span>Ideas</span></button>
+  </nav>
+
+  <!-- ========== ADD PLACE ========== -->
+  <dialog class="sheet" id="add" aria-labelledby="add-title">
+    <div class="sheet-grabber"></div>
+    <header class="sheet-nav">
+      <button class="nav-btn" data-close>Cancel</button>
+      <h2 id="add-title">Add a place</h2>
+      <button class="nav-btn strong" type="submit" form="add-form">Add</button>
+    </header>
+    <form class="sheet-body" id="add-form" novalidate>
+      <div class="list">
+        <label class="row" for="a-name"><span class="row-main"><span class="row-title">Name</span></span>
+          <input class="field-input" id="a-name" placeholder="e.g. Tiger Point" autocomplete="off"></label>
+        <label class="row" for="a-type"><span class="row-main"><span class="row-title">Type</span></span>
+          <select class="field-input" id="a-type"></select></label>
+        <label class="row" for="a-day"><span class="row-main"><span class="row-title">Day</span></span>
+          <select class="field-input" id="a-day"></select></label>
+        <label class="row" for="a-at"><span class="row-main"><span class="row-title">Coordinates</span><span class="row-sub">Optional</span></span>
+          <input class="field-input" id="a-at" inputmode="decimal" placeholder="18.7215, 73.3945" autocomplete="off"></label>
+      </div>
+      <div class="list">
+        <a class="row" id="a-search" target="_blank" rel="noopener" href="https://www.google.com/maps">
+          <span class="tile" data-tone="green"><svg class="i"><use href="#i-search"/></svg></span>
+          <span class="row-main"><span class="row-title">Find it on Google Maps</span><span class="row-sub">Right-click the place, tap its coordinates to copy, paste above</span></span>
+          <svg class="i chev"><use href="#i-chevron-right"/></svg></a>
+      </div>
+      <p class="list-footer">Without coordinates the stop sits in the middle of your route and is marked approximate.</p>
+    </form>
+  </dialog>
+</div>
+
+<script>
+const h = IUI.html, M = IUI.md;
+
+/* The trip lives in the embedded Markdown (weekend.md). This script only draws it and writes edits back. */
+const S = IUI.mdState("weekend", { ui: { day: "All", sel: null, cur: null, eat: "stay", q: "" } });
+IUI.md.sheet(S, { filename: "weekend-plan.md" });
+
+const TYPE = {
+  start:   { icon: "pin",    tone: "gray",   label: "Start" },
+  nature:  { icon: "leaf",   tone: "green",  label: "Nature" },
+  culture: { icon: "layers", tone: "indigo", label: "Culture" },
+  hike:    { icon: "walk",   tone: "orange", label: "Hike" },
+  view:    { icon: "camera", tone: "teal",   label: "Viewpoint" },
+  food:    { icon: "food",   tone: "red",    label: "Food" },
+  stay:    { icon: "bed",    tone: "blue",   label: "Stay" },
+  night:   { icon: "moon",   tone: "purple", label: "Night" },
+};
+const type = (k) => TYPE[k] || TYPE.view;
+
+/* ---------- helpers ---------- */
+const mapsSearch = (q) => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q || "");
+const pos = (x) => M.latlng(x.at);
+const drive = (a, b) => { const km = IUI.geo.km(a, b); return { km, min: Math.round((km * 1.4) / 35 * 60) }; }; // road factor 1.4 at 35 km/h
+const mapsRoute = (stops) => {
+  const p = stops.map(pos).filter(Boolean), c = (x) => x.lat + "," + x.lng;
+  if (p.length < 2) return mapsSearch(S.doc().meta.place || "");
+  const mids = p.slice(1, -1).map(c).join("|");
+  return "https://www.google.com/maps/dir/?api=1&origin=" + c(p[0]) + "&destination=" + c(p[p.length - 1]) + (mids ? "&waypoints=" + encodeURIComponent(mids) : "") + "&travelmode=driving";
+};
+const days = (s) => [...new Set(M.items(s.doc, "stops").map((x) => x.day).filter(Boolean))];
+const visible = (s) => { const a = M.items(s.doc, "stops"); return s.ui.day === "All" ? a : a.filter((x) => x.day === s.ui.day); };
+const centroid = () => {
+  const p = S.items("stops").map(pos).filter(Boolean);
+  if (!p.length) return null;
+  return { lat: p.reduce((t, x) => t + x.lat, 0) / p.length, lng: p.reduce((t, x) => t + x.lng, 0) / p.length };
+};
+const fmtAt = (c) => c ? c.lat.toFixed(4) + ", " + c.lng.toFixed(4) : "";
+const val = (id) => document.getElementById(id).value.trim();
+const TONES_STAY = ["teal", "blue", "indigo", "purple"], TONES_EAT = ["orange", "red", "pink", "yellow"];
+
+/* ---------- trip ---------- */
+const tripTop = (s) => {
+  const m = s.doc.meta, vis = visible(s), all = ["All", ...days(s)];
+  let km = 0, dmin = 0;
+  vis.forEach((p, i) => { const a = pos(p), b = vis[i + 1] && pos(vis[i + 1]); if (a && b) { const d = drive(a, b); km += d.km; dmin += d.min; } });
+  const atMin = vis.reduce((t, p) => t + M.minutes(p.time), 0);
+  const stay = M.items(s.doc, "stay").find((x) => M.yes(x.pick));
+  return h`
+    <div class="hero">
+      ${IUI.icon("leaf", "hero-art")}
+      <p class="hero-k">${m.dates || ""}</p>
+      <h2 class="hero-t">${m.place || s.doc.title}</h2>
+      <p class="hero-s">${s.doc.intro}</p>
+      <div class="hero-stats">
+        <div><b>${vis.length}</b><span>Stops</span></div>
+        <div><b>${IUI.fmt.dist(km)}</b><span>Route est.</span></div>
+        <div><b>${M.dur(dmin)}</b><span>Drive est.</span></div>
+        <div><b>${M.dur(atMin)}</b><span>At stops</span></div>
+      </div>
+      ${stay ? h`<p class="hero-s" style="margin-top:10px">Staying: ${stay.name}${stay.price ? " · " + stay.price : ""}</p>` : ""}
+    </div>
+    <div class="seg" data-seg="day">${all.map((d) => h`<button data-value="${d}" aria-checked="${s.ui.day === d}">${d === "All" ? "Both days" : d}</button>`)}</div>`;
+};
+
+const tripBody = (s) => {
+  const vis = visible(s);
+  const rows = vis.map((p, i) => {
+    const t = type(p.type), n = vis[i + 1], a = pos(p), b = n && pos(n);
+    const leg = a && b ? (() => { const d = drive(a, b); return h`<div class="leg" data-key="leg-${p._id}">${IUI.icon("car")}<span>${IUI.fmt.dist(d.km)} · about ${M.dur(d.min)} drive (estimate)</span></div>`; })() : "";
+    return h`<div class="row" data-key="${p._id}" data-id="${p._id}" data-swipe="Delete">
+      <button class="row-del" aria-label="Delete ${p.name}"><svg class="i"><use href="#i-minus-circle"/></svg></button>
+      <button class="row-main" data-go="place" data-arg="${p._id}" ${IUI.raw(s.ui.sel === p._id ? 'aria-current="true"' : "")}>
+        <span class="tile" data-tone="${t.tone}">${IUI.icon(t.icon)}</span>
+        <span class="row-title">${i + 1}. ${p.name}</span>
+        <span class="row-sub">${[s.ui.day === "All" ? p.day : "", p.time ? p.time + " here" : t.label, M.yes(p.approx) ? "position approx." : ""].filter(Boolean).join(" · ")}</span>
+      </button>
+      <span class="handle" role="button" aria-label="Drag ${p.name} to reorder">${IUI.icon("grip")}</span>
+    </div>${leg}`;
+  });
+  if (!vis.length) return h`<div class="empty"><div class="empty-icon">${IUI.icon("pin")}</div><h3>No stops yet</h3><p>Add a place, or pick ideas to fill the day.</p><button class="btn sm" data-sheet="add">Add place</button></div>`;
+  return h`
+    <h2 class="list-header">Route in order</h2>
+    <div class="list" id="stops" data-reorder>${rows}</div>
+    <p class="list-footer">Swipe to delete, Edit to reorder, tap for details. Distances are straight-line between pins and drive times assume 35 km/h, so treat both as estimates.</p>`;
+};
+
+const drawMap = (s) => {
+  const vis = visible(s);
+  const places = vis.map((p) => ({ p, c: pos(p) })).filter((x) => x.c).map(({ p, c }) => ({ id: p._id, name: p.name, lat: c.lat, lng: c.lng }));
+  IUI.map("#map", { places, selected: s.ui.sel, onSelect: (id) => S.ui({ sel: id }), height: 230, route: true, minKm: 2 });
+  document.getElementById("route-link").href = mapsRoute(vis);
+  document.getElementById("trip-eyebrow").textContent = M.yes(s.doc.meta.sample) ? "Sample plan · edit freely" : (s.doc.meta.dates || "");
+  document.getElementById("trip-title").textContent = s.doc.title || "Weekend Getaway";
+};
+
+/* ---------- stay & eat: visual pick cards ---------- */
+const card = (sec, x, i, tones, icon) => h`<div class="choice-wrap" data-key="${x._id}">
+    <button class="choice" data-pick="${sec}" data-id="${x._id}" data-tone="${tones[i % tones.length]}" aria-pressed="${M.yes(x.pick)}">
+      <span class="choice-art">${IUI.icon(icon)}</span>
+      <span class="choice-check">${IUI.icon("check")}</span>
+      <span class="choice-body">
+        <span class="choice-t">${x.name}</span>
+        <span class="choice-s">${[x.area, x.price].filter(Boolean).join(" · ")}</span>
+        <span class="choice-tags">${M.list(x.tags).slice(0, 2).map((t) => h`<span class="badge">${t}</span>`)}</span>
+      </span>
+    </button>
+    <a class="choice-link" href="${mapsSearch(x.search || x.name)}" target="_blank" rel="noopener" aria-label="Search ${x.name} on Google Maps"><span>${IUI.icon("map")}</span></a>
+  </div>`;
+
+const eatView = (s) => {
+  const stay = M.items(s.doc, "stay"), eat = M.items(s.doc, "eat");
+  const pickedStay = stay.find((x) => M.yes(x.pick)), pickedEat = eat.filter((x) => M.yes(x.pick));
+  const showStay = s.ui.eat === "stay";
+  const list = showStay ? stay : eat;
+  return h`
+    <div class="seg" data-seg="eat"><button data-value="stay" aria-checked="${showStay}">Stay · ${stay.length}</button><button data-value="eat" aria-checked="${!showStay}">Eat · ${eat.length}</button></div>
+    <div class="choices">${list.map((x, i) => card(showStay ? "stay" : "eat", x, i, showStay ? TONES_STAY : TONES_EAT, showStay ? "bed" : /coffee|sweet|cafe/i.test(x.tags + x.name) ? "coffee" : "food"))}</div>
+    <h2 class="list-header">Your picks</h2>
+    <div class="list">
+      <div class="row"><span class="tile" data-tone="blue">${IUI.icon("bed")}</span><span class="row-main"><span class="row-title">${pickedStay ? pickedStay.name : "No stay picked"}</span><span class="row-sub">${showStay ? "One stay at a time" : "Stay"}</span></span></div>
+      <div class="row"><span class="tile" data-tone="red">${IUI.icon("food")}</span><span class="row-main"><span class="row-title">${pickedEat.length ? pickedEat.map((x) => x.name).join(", ") : "No food picked"}</span><span class="row-sub">Eat · pick as many as you like</span></span></div>
+    </div>
+    <p class="list-footer">These are kinds of places, not reviewed businesses. The map icon opens a live Google Maps search, so check ratings, hours and prices there.</p>`;
+};
+
+/* ---------- packing ---------- */
+const packView = (s) => {
+  const items = M.items(s.doc, "packing"), done = items.filter((x) => x.done).length;
+  const groups = [...new Set(items.map((x) => x.group || "Other"))];
+  return h`
+    <div class="card" style="display:flex;align-items:center;gap:16px">
+      ${IUI.ring(items.length ? done / items.length : 0, { size: 64, stroke: 6, label: String(done) })}
+      <div><h2 class="section-title" style="margin:0">${done} of ${items.length} packed</h2><p class="list-footer" style="margin:4px 0 0;padding:0">${done === items.length && items.length ? "All set. Have a great trip." : "Monsoon kit: rain layer and grippy shoes first."}</p></div>
+    </div>
+    ${groups.map((g) => h`
+      <h2 class="list-header">${g}</h2>
+      <div class="list">${items.filter((x) => (x.group || "Other") === g).map((x) => h`
+        <label class="row" data-key="${x._id}" for="pk-${x._id}">
+          <input type="checkbox" class="check-input" id="pk-${x._id}" data-pk="${x._id}" ${IUI.raw(x.done ? "checked" : "")}>
+          <span class="row-main"><span class="row-title">${x.text}</span></span>
+        </label>`)}</div>`)}`;
+};
+
+/* ---------- ideas ---------- */
+const ideasView = (s) => {
+  const vibes = M.items(s.doc, "vibe"), on = vibes.filter((v) => v.done).map((v) => v.text);
+  const q = s.ui.q.trim().toLowerCase(), stops = M.items(s.doc, "stops");
+  const list = M.items(s.doc, "ideas").filter((x) => (!on.length || on.includes(x.vibe)) && (!q || (x.title + " " + x.why + " " + x.vibe).toLowerCase().includes(q)));
+  return h`
+    <div class="chips" data-chips="vibe" data-multi>${vibes.map((v) => h`<button class="chip" data-value="${v.text}" aria-pressed="${!!v.done}">${v.text}</button>`)}</div>
+    ${list.length ? h`<div class="choices">${list.map((x) => {
+      const t = type(x.type), added = stops.some((p) => p.idea === x.title);
+      return h`<div class="choice-wrap" data-key="${x._id}">
+        <button class="choice" data-idea="${x._id}" data-tone="${t.tone}" aria-pressed="${added}">
+          <span class="choice-art">${IUI.icon(t.icon)}</span>
+          <span class="choice-check">${IUI.icon("check")}</span>
+          <span class="choice-body"><span class="choice-t">${x.title}</span><span class="choice-s">${x.why}</span>
+            <span class="choice-tags"><span class="badge">${x.vibe}</span><span class="badge">${x.time}</span></span></span>
+        </button>
+        <a class="choice-link" href="${mapsSearch(x.search || x.title)}" target="_blank" rel="noopener" aria-label="Search ${x.title} on Google Maps"><span>${IUI.icon("map")}</span></a>
+      </div>`;
+    })}</div>`
+    : h`<div class="empty"><div class="empty-icon">${IUI.icon("search")}</div><h3>No ideas match</h3><p>Turn on another vibe, or ask Claude for more ideas in the plan file.</p></div>`}
+    <p class="list-footer">Tap a card to add it to the trip (it lands on the day you are viewing), tap again to remove it.</p>`;
+};
+
+/* ---------- stop detail ---------- */
+const placeView = (s) => {
+  const p = M.items(s.doc, "stops").find((x) => x._id === s.ui.cur);
+  if (!p) return h`<div class="empty"><div class="empty-icon">${IUI.icon("pin")}</div><h3>Stop not found</h3><p>It may have been removed.</p></div>`;
+  const t = type(p.type), ds = days(s);
+  return h`<div class="content">
+    <div class="card">
+      <span class="badge" data-tone="${t.tone}">${t.label}</span>
+      <h2 class="section-title" style="margin:8px 0 4px">${p.name}</h2>
+      <p class="stop-note">${p.note || "No notes yet."}</p>
+    </div>
+    ${ds.length > 1 ? h`<div class="seg" data-seg="stop-day">${ds.map((d) => h`<button data-value="${d}" aria-checked="${p.day === d}">${d}</button>`)}</div>` : ""}
+    <div class="list">
+      <div class="row">
+        <span class="row-main"><span class="row-title">Time here</span></span>
+        <div class="stepper">
+          <button data-step="-15" aria-label="Less time">${IUI.icon("minus")}</button>
+          <input type="number" id="pl-mins" value="${M.minutes(p.time)}" min="0" max="720" step="15" inputmode="numeric" aria-label="Minutes here">
+          <button data-step="15" aria-label="More time">${IUI.icon("plus")}</button>
+        </div>
+      </div>
+      <label class="row" for="pl-at"><span class="row-main"><span class="row-title">Coordinates</span><span class="row-sub">${M.yes(p.approx) ? "Approximate" : "Set"}</span></span>
+        <input class="field-input" id="pl-at" value="${p.at || ""}" inputmode="decimal" placeholder="lat, lng" autocomplete="off"></label>
+    </div>
+    <h2 class="list-header">Notes</h2>
+    <div class="list"><div class="row" style="padding-block:10px"><textarea class="pl-note" id="pl-note" aria-label="Notes for this stop">${p.note || ""}</textarea></div></div>
+    <div class="list">
+      <a class="row" target="_blank" rel="noopener" href="${mapsSearch(p.name + " " + (s.doc.meta.place || ""))}">
+        <span class="tile" data-tone="green">${IUI.icon("map")}</span>
+        <span class="row-main"><span class="row-title">Open in Google Maps</span><span class="row-sub">Hours, reviews, directions</span></span>
+        <svg class="i chev"><use href="#i-chevron-right"/></svg></a>
+      <button class="row center destructive" data-del-stop="${p._id}"><span class="row-title">Remove stop</span></button>
+    </div>
+  </div>`;
+};
+
+/* ---------- wiring ---------- */
+IUI.render("#trip-top", tripTop, S);
+IUI.render("#trip-body", tripBody, S);
+IUI.render("#eat-body", eatView, S);
+IUI.render("#pack-body", packView, S);
+IUI.render("#ideas-body", ideasView, S);
+IUI.render("#place-body", placeView, S);
+S.subscribe(drawMap);
+drawMap(S.get());
+
+IUI.onScreen("place", (id) => S.ui({ cur: id, sel: id }));
+IUI.on("iui:change", "[data-seg=day]", (e) => S.ui({ day: e.detail.value }));
+IUI.on("iui:change", "[data-seg=eat]", (e) => S.ui({ eat: e.detail.value }));
+IUI.on("iui:change", "[data-seg=stop-day]", (e) => S.patch("stops", S.ui().cur, { day: e.detail.value }));
+
+// stops: swipe delete + undo, reorder within the visible day
+IUI.on("iui:delete", "#stops", (e) => {
+  const p = S.items("stops").find((x) => x._id === e.detail.id);
+  const undo = S.remove("stops", e.detail.id);
+  IUI.toast("Removed " + (p ? p.name : "stop"), undo);
+});
+IUI.on("iui:reorder", "#stops", (e) => {
+  const vis = visible(S.get()), all = S.items("stops");
+  const from = all.findIndex((x) => x._id === vis[e.detail.from]._id), to = all.findIndex((x) => x._id === vis[e.detail.to]._id);
+  S.update("stops", (a) => IUI.move(a, from, to));
+});
+
+// stop detail
+IUI.on("change", "#pl-mins", (e, el) => S.patch("stops", S.ui().cur, { time: M.dur(Math.max(0, +el.value || 0)) }));
+IUI.on("change", "#pl-note", (e, el) => S.patch("stops", S.ui().cur, { note: el.value.trim() }));
+IUI.on("change", "#pl-at", (e, el) => {
+  const c = M.latlng(el.value);
+  if (!c) return IUI.toast("Paste coordinates like 18.7460, 73.3999");
+  S.patch("stops", S.ui().cur, { at: fmtAt(c), approx: "" });
+});
+IUI.on("click", "[data-del-stop]", async (e, el) => {
+  const id = el.getAttribute("data-del-stop"), p = S.items("stops").find((x) => x._id === id);
+  if (!p || !(await IUI.confirm({ title: "Remove " + p.name + "?", message: "You can undo right after.", confirm: "Remove", destructive: true }))) return;
+  const undo = S.remove("stops", id);
+  IUI.back();
+  IUI.toast("Removed " + p.name, undo);
+});
+
+// add sheet
+const opts = (pairs, cur) => pairs.map(([v, l]) => h`<option value="${v}" ${IUI.raw(v === cur ? "selected" : "")}>${l}</option>`);
+const updateSearch = () => { document.getElementById("a-search").href = mapsSearch((val("a-name") + " " + (S.doc().meta.place || "")).trim()); };
+IUI.on("iui:sheet", "#add", (e) => {
+  if (!e.detail.open) return;
+  document.getElementById("add-form").reset();
+  const s = S.get(), ds = days(s);
+  IUI.morph(document.getElementById("a-type"), opts(Object.keys(TYPE).filter((k) => k !== "start").map((k) => [k, TYPE[k].label]), "view"));
+  IUI.morph(document.getElementById("a-day"), opts((ds.length ? ds : ["Sat"]).map((d) => [d, d]), s.ui.day !== "All" ? s.ui.day : ds[ds.length - 1]));
+  updateSearch();
+});
+IUI.on("input", "#a-name", updateSearch);
+IUI.on("submit", "#add-form", (e) => {
+  e.preventDefault();
+  const name = val("a-name");
+  if (!name) return IUI.toast("Add a name first");
+  const c = M.latlng(val("a-at"));
+  if (val("a-at") && !c) return IUI.toast("Coordinates look wrong. Paste them like 18.7460, 73.3999");
+  const at = c || centroid();
+  const item = S.add("stops", { name, day: val("a-day"), type: val("a-type"), time: "1 h", at: fmtAt(at), approx: c ? "" : "yes" });
+  IUI.closeSheet("add");
+  IUI.toast("Added " + name, () => S.remove("stops", item._id));
+});
+
+// stay & eat picks: stay is single-choice, eat is multi
+IUI.on("click", "[data-pick]", (e, el) => {
+  const sec = el.getAttribute("data-pick"), id = el.getAttribute("data-id");
+  S.update(sec, (a) => a.map((x) => {
+    if (x._id === id) return { ...x, pick: M.yes(x.pick) ? "" : "yes" };
+    return sec === "stay" ? { ...x, pick: "" } : x;
+  }));
+  IUI.haptic();
+});
+
+// packing
+IUI.on("change", "[data-pk]", (e, el) => S.patch("packing", el.getAttribute("data-pk"), { done: el.checked }));
+IUI.on("submit", "#pk-form", (e) => {
+  e.preventDefault();
+  const text = val("pk-new");
+  if (!text) return;
+  S.add("packing", { text, done: false, group: "Other" });
+  e.target.reset();
+});
+IUI.on("click", "[data-clear-done]", () => {
+  const before = S.items("packing");
+  if (!before.some((x) => x.done)) return IUI.toast("Nothing ticked yet");
+  S.update("packing", (a) => a.filter((x) => !x.done));
+  IUI.toast("Cleared packed items", () => S.update("packing", () => before));
+});
+
+// ideas: vibe chips filter, tap a card to add/remove it as a stop
+IUI.on("iui:change", "[data-chips=vibe]", (e) => S.update("vibe", (a) => a.map((v) => ({ ...v, done: e.detail.values.includes(v.text) }))));
+IUI.on("input", "#id-q", (e, el) => S.ui({ q: el.value }));
+IUI.on("click", "[data-idea]", (e, el) => {
+  const x = S.items("ideas").find((i) => i._id === el.getAttribute("data-idea"));
+  if (!x) return;
+  const existing = S.items("stops").find((p) => p.idea === x.title);
+  if (existing) { const undo = S.remove("stops", existing._id); return IUI.toast("Removed " + x.title, undo); }
+  const s = S.get(), ds = days(s);
+  const item = S.add("stops", { name: x.title, day: s.ui.day !== "All" ? s.ui.day : ds[ds.length - 1] || "Sat", type: x.type, time: x.time, at: fmtAt(centroid()), approx: "yes", note: x.why, idea: x.title });
+  IUI.toast("Added " + x.title + " to " + item.day, () => S.remove("stops", item._id));
+});
+</script>

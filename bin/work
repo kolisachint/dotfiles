@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+# work [dir] — one tmux session per project folder.
+#
+# Session name = folder name. Run it again with the same folder
+# to jump back into the same session. Help: work -h
+#
+# Testing only (never the default server):
+#   WORK_TMUX_SOCKET=hctest WORK_NO_ATTACH=1 work /tmp
+
+set -eu
+
+die() { printf 'work: %s\n' "$*" >&2; exit 1; }
+
+# Every tmux call goes through here, so the test socket applies everywhere.
+tm() {
+  if [ -n "${WORK_TMUX_SOCKET:-}" ]; then
+    tmux -L "$WORK_TMUX_SOCKET" "$@"
+  else
+    tmux "$@"
+  fi
+}
+
+case "${1:-}" in
+  -h|--help)
+    cat <<'EOF'
+usage: work [dir]
+       work -h
+
+Opens the tmux session for a project folder, or jumps back
+into it if it is already running.
+dir defaults to the current folder.
+
+Windows:
+
+  1 code    editor (nvim) | hoocode
+  2 shell   plain shell
+  3 agents  agent 1 / agent 2 | diff (agentdiff)
+
+Layout:
+
+  Window 1: code
+  +---------------+-------------+
+  | editor        | hoocode     |
+  | nvim          |             |
+  +---------------+-------------+
+
+  Window 2: shell
+  +---------------------------+
+  | shell                     |
+  +---------------------------+
+
+  Window 3: agents
+  +---------------+-------------+
+  | agent 1       |             |
+  | hoocode       | diff        |
+  +---------------+ agentdiff   |
+  | agent 2       |             |
+  | hoocode       |             |
+  +---------------+-------------+
+
+Keys: Ctrl-Space d detaches. Ctrl-Space ? lists all keys.
+Cheat sheet: ~/.config/tmux/cheatsheet.txt
+
+Env (for testing):
+  WORK_TMUX_SOCKET=name   tmux server "name" (tmux -L name)
+  WORK_NO_ATTACH=1        do not attach or switch
+EOF
+    exit 0
+    ;;
+esac
+
+[ "$#" -le 1 ] || die "one folder only (see work -h)"
+
+dir=${1:-$PWD}
+[ -d "$dir" ] || die "not a folder: $dir"
+dir=$(cd -- "$dir" && pwd)
+
+name=$(basename -- "$dir")
+name=${name//[.:]/_}
+
+if tm has-session -t "=$name" 2>/dev/null; then
+  if [ "${WORK_NO_ATTACH:-0}" = 1 ]; then
+    echo "work: session '$name' is already running (not attached)"
+    exit 0
+  fi
+  if [ -n "${TMUX:-}" ]; then
+    tm switch-client -t "=$name"
+  else
+    tm attach -t "=$name"
+  fi
+  exit 0
+fi
+
+# ── Window 1: code ─────────────────────────────────────────────
+out=$(tm new-session -d -s "$name" -c "$dir" -n code \
+  -P -F '#{window_id} #{pane_id}') || die "could not create session '$name'"
+read -r code_win editor <<<"$out"
+tm setw -t "$code_win" automatic-rename off
+tm setw -t "$code_win" allow-set-title off
+
+hoo_code=$(tm split-window -h -l 40% -t "$editor" -c "$dir" -P -F '#{pane_id}')
+
+tm send-keys -t "$editor" 'nvim' Enter
+tm send-keys -t "$hoo_code" 'hoocode' Enter
+tm select-pane -t "$editor" -T 'editor'
+tm select-pane -t "$hoo_code" -T 'hoocode'
+tm select-pane -t "$editor"
+
+# ── Window 2: shell ────────────────────────────────────────────
+tm new-window -t "=$name:" -n shell -c "$dir" >/dev/null
+
+# ── Window 3: agents ───────────────────────────────────────────
+out=$(tm new-window -t "=$name:" -n agents -c "$dir" \
+  -P -F '#{window_id} #{pane_id}') || die "could not create agents window"
+read -r agents_win agent_1 <<<"$out"
+tm setw -t "$agents_win" automatic-rename off
+tm setw -t "$agents_win" allow-set-title off
+
+diff_pane=$(tm split-window -h -l 50% -t "$agent_1" -c "$dir" -P -F '#{pane_id}')
+tm select-pane -t "$agent_1"
+agent_2=$(tm split-window -v -t "$agent_1" -c "$dir" -P -F '#{pane_id}')
+
+tm send-keys -t "$agent_1" 'hoocode' Enter
+tm send-keys -t "$agent_2" 'hoocode' Enter
+tm send-keys -t "$diff_pane" 'command -v agentdiff >/dev/null && agentdiff || echo "agentdiff not installed"' Enter
+
+tm select-pane -t "$agent_1" -T 'agent 1'
+tm select-pane -t "$agent_2" -T 'agent 2'
+tm select-pane -t "$diff_pane" -T 'diff'
+
+# ── Open on window 1 ───────────────────────────────────────────
+tm select-window -t "$code_win"
+
+if [ "${WORK_NO_ATTACH:-0}" = 1 ]; then
+  echo "work: created session '$name' (not attached)"
+  exit 0
+fi
+if [ -n "${TMUX:-}" ]; then
+  tm switch-client -t "=$name"
+else
+  tm attach -t "=$name"
+fi

@@ -1,0 +1,72 @@
+#!/usr/bin/env zsh
+# diffwatch — live view of what is changing in the current folder.
+#
+# In a git repo: changed files (with words, not just colour) and the diff,
+# redrawn only when something changes. Outside git: files modified in the
+# last 30 minutes. Ctrl-c to stop. To read the full diff: run `vd` (nvim diffview).
+
+interval=${DIFFWATCH_INTERVAL:-2}
+git_ro=(git --no-optional-locks -c core.fsmonitor=false -c color.ui=always)
+last=""
+
+label() {
+  case $1 in
+    M*|?M) print "modified " ;;
+    A*)    print "added    " ;;
+    D*|?D) print "deleted  " ;;
+    R*)    print "renamed  " ;;
+    '??')  print "new file " ;;
+    *)     print "$1       " ;;
+  esac
+}
+
+draw_git() {
+  local rows=$(( $(tput lines) - 1 )) cols=$(tput cols)
+  local st; st=$(git --no-optional-locks status --porcelain=v1 -uall 2>/dev/null)
+  {
+    print -P "%B Changed files%b  ($(date +%H:%M:%S))   full diff: vd"
+    print -- "${(l:$cols::─:)}"
+    if [[ -z $st ]]; then
+      print "  No changes yet. Waiting…"
+    else
+      print -r -- "$st" | while IFS= read -r line; do
+        print -r -- "  $(label "${line[1,2]}")${line[4,-1]}"
+      done
+      print
+      "${git_ro[@]}" diff HEAD --stat=$cols 2>/dev/null | tail -1
+      print -- "${(l:$cols::─:)}"
+      "${git_ro[@]}" diff HEAD 2>/dev/null || "${git_ro[@]}" diff
+    fi
+  } | head -n $rows
+}
+
+draw_plain() {
+  local rows=$(( $(tput lines) - 1 ))
+  {
+    print -P "%B Recently changed%b (last 30 min, not a git repo)  $(date +%H:%M:%S)"
+    print "  Run 'git init' here to see real diffs."
+    print
+    find . -type f -mmin -30 \
+      -not -path '*/.git/*' -not -path '*/node_modules/*' \
+      -not -path '*/__pycache__/*' -not -path './lib/*' -not -path './bin/*' \
+      -exec stat -f '%Sm  %N' -t '%H:%M:%S' {} + 2>/dev/null | sort -r
+  } | head -n $rows
+}
+
+trap 'tput cnorm; exit 0' INT TERM
+tput civis
+printf '\033]2;changes\033\\'   # pane title
+while true; do
+  if git rev-parse --is-inside-work-tree &>/dev/null; then
+    key=$(git --no-optional-locks status --porcelain=v1 -uall; git --no-optional-locks diff HEAD 2>/dev/null | cksum)
+    out_fn=draw_git
+  else
+    key=$(find . -type f -mmin -30 -not -path '*/.git/*' -exec stat -f '%m %N' {} + 2>/dev/null | cksum)
+    out_fn=draw_plain
+  fi
+  key+="$(tput lines)x$(tput cols)"
+  if [[ $key != $last ]]; then
+    clear; $out_fn; last=$key
+  fi
+  sleep $interval
+done

@@ -1,0 +1,47 @@
+# Allow-list: anything not named below is ignored, so a stray file
+# (a token, a log, a session dump) can't sneak in by accident.
+/*
+!/.gitignore
+!/README.md
+!/install.sh
+!/Brewfile
+!/hooks/
+!/zsh/
+!/ghostty/
+!/tmux/
+!/nvim/
+!/herdr/
+!/herdr-app/
+!/hoocode/
+!/git/
+!/bin/
+!/claude/
+!/codex/
+!/zed/
+!/cheatsheets/
+
+# Never track, even inside allowed folders
+.DS_Store
+*.bak*
+*.log
+*.sock*
+__pycache__/
+node_modules/
+auth.json
+hosts.yml
+*.sqlite*
+*.jsonl
+.zshrc.local
+.env
+.env.*
+*.pem
+*.key
+id_*
+
+# Real hoocode settings hold an API key; only settings.example.json is tracked
+/hoocode/settings.json
+# Downloaded by TPM / lazy.nvim, not ours
+/tmux/plugins/
+/nvim/backups/
+# Herdr app's runtime window state
+/herdr-app/layouts/.state/

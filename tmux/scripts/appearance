@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+# appearance [--watch] — follow macOS light/dark in tmux.
+#
+# Detects: defaults read -g AppleInterfaceStyle (Dark = dark, missing = light)
+# Applies: sources themes/light.conf or themes/dark.conf into running server.
+# --watch: poll every 10s so an open tmux updates when macOS switches.
+
+mode_now() {
+  if defaults read -g AppleInterfaceStyle 2>/dev/null | grep -qi dark; then
+    print dark
+  else
+    print light
+  fi
+}
+
+apply() {
+  local mode=$1
+  tmux source-file ~/.config/tmux/themes/${mode}.conf 2>/dev/null
+}
+
+if [[ $1 == --watch ]]; then
+  # Single watcher per user (lockfile guards double-start from run-shell -b).
+  lock=${TMPDIR:-/tmp}/tmux-appearance-$USER.lock
+  [[ -f $lock ]] && exit 0
+  touch "$lock"; trap 'rm -f "$lock"' EXIT; trap 'exit 0' INT TERM
+  last=""
+  while true; do
+    m=$(mode_now)
+    if [[ $m != $last ]]; then
+      apply $m; last=$m
+    fi
+    sleep 10 & wait $!
+  done
+  exit 0
+fi
+
+apply $(mode_now)

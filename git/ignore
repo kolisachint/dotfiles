@@ -1,0 +1,3 @@
+# Global git ignore — applies to every repo on this Mac.
+.DS_Store
+*.swp

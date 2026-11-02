@@ -1,0 +1,31 @@
+// Media tasks, matched to ~/.config/nvim/lua/config/media.lua.
+// Images open inside Zed already (its built-in image viewer).
+// Keys: Space o o / o p / o s (keymap.json). Also in cmd-shift-p "task: spawn".
+[
+  {
+    "label": "Open with default app",
+    "command": "open \"$ZED_FILE\"",
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Play media (ffplay)",
+    // Audio plays with no window; video gets its own window
+    // (in that window: Space pause, q quit)
+    "command": "pkill -x ffplay; case \"$(echo \"$ZED_FILE\" | tr A-Z a-z)\" in *.mp3|*.wav|*.flac|*.m4a|*.aac|*.ogg|*.opus|*.aiff|*.aif|*.wma) ffplay -nodisp -autoexit -loglevel quiet \"$ZED_FILE\" ;; *) ffplay -autoexit -loglevel quiet -window_title \"$ZED_FILENAME\" \"$ZED_FILE\" ;; esac",
+    "reveal": "never",
+    "hide": "always",
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "Stop playback",
+    "command": "pkill -x ffplay; true",
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Media info (ffprobe)",
+    "command": "ffprobe -hide_banner \"$ZED_FILE\"",
+    "reveal": "always"
+  }
+]

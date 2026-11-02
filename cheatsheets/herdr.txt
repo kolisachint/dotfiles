@@ -1,0 +1,70 @@
+HERDR KEYS                        (q closes this)
+=================================================
+
+In the app, Cmd /  shows every key.
+Cmd Shift P  opens the command palette (type to search).
+
+
+START  (in any shell)
+---------------------
+  herdr-app     open the Herdr window
+  hc ls         list running terminals / agents
+  hc attach t6  take over terminal t6 here
+                (Ctrl \ to let go again)
+
+  New space for a folder, running hoocode:
+  herdr-app do space.new --folder "$PWD" --argv '["hoocode"]'
+
+
+SEE ALL AGENTS
+--------------
+  Cmd B         show / hide sidebar (spaces + agents)
+  Cmd ]  Cmd [  next / previous agent
+  Ctrl 1 … 9    go to space 1 … 9
+  Cmd Opt ]  [  next / previous space
+
+
+AGENTS + CHANGES
+----------------
+  Changes       button, top right: live diff panel
+                (stays open for that space)
+  Files         button, top right: file tree
+  Click a file in Changes to see its diff.
+  Deeper look:  Cmd D, then  nvim  then  Space g d
+
+
+TABS
+----
+  Cmd T         new tab
+  Cmd 1 … 9     go to tab 1 … 9
+  Ctrl Tab      next tab  (Ctrl Shift Tab: previous)
+  F2            rename tab   (Shift F2: rename space)
+  Cmd W         close tab
+
+
+PANES
+-----
+  Cmd D         split right
+  Cmd Shift D   split down
+  Cmd Opt arrows        move between panes
+  Cmd Opt Shift arrows  swap panes
+  Cmd Shift Enter       zoom pane / unzoom
+  Cmd Shift W   close pane
+
+
+SPACES
+------
+  Cmd N         new space
+  Cmd Shift L   switch layout
+
+
+VIEW
+----
+  Cmd =  Cmd -  bigger / smaller
+  Cmd 0         reset size
+  Cmd ,         settings
+
+
+ESCAPE HATCH
+------------
+  Ctrl Opt Shift Esc   reset layout + keys if broken

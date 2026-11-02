@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# pre-commit — refuse to commit secrets or private files.
+# Enabled by install.sh (git config core.hooksPath hooks).
+# Bypass only if you are sure: git commit --no-verify
+set -u
+fail=0
+say() { printf '%s\n' "$*" >&2; }
+
+# 1. Files that must never be committed, whatever they contain
+bad_names='(^|/)(auth\.json|hosts\.yml|\.zshrc\.local|history\.jsonl|known_hosts|id_[a-z0-9]+|[^/]*\.(sqlite[^/]*|pem|key|p12))$|(^|/)hoocode/settings\.json$'
+while IFS= read -r f; do
+  if [[ $f =~ $bad_names ]]; then
+    say "BLOCKED  private file: $f"
+    fail=1
+  fi
+done < <(git diff --cached --name-only --diff-filter=ACMR)
+
+# 2. gitleaks, if installed (brew install gitleaks)
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks git --staged --no-banner --redact 2>/dev/null &&
+     ! gitleaks protect --staged --no-banner --redact 2>/dev/null; then
+    say "BLOCKED  gitleaks found a secret (see above)"
+    fail=1
+  fi
+fi
+
+# 3. Built-in pattern check (always runs, catches the common token shapes)
+# sk- must not follow a letter, so words like "Task-based-..." don't trip it
+patterns='(tvly-[A-Za-z0-9_-]{10,}|(^|[^A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}|sk-ant-[A-Za-z0-9_-]{10,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[abprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{30,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----)'
+# Scans every staged file; prints file:line only, never the secret itself
+hits=$(git grep --cached -nIE "$patterns" -- . ':!hooks/pre-commit' | cut -d: -f1,2 || true)
+if [[ -n $hits ]]; then
+  say "BLOCKED  token-like text (file:line, value hidden):"
+  printf '  %s\n' "$hits" >&2
+  fail=1
+fi
+
+if (( fail )); then
+  say ""
+  say "Commit stopped. Remove the secret (or unstage the file) and try again."
+  exit 1
+fi
+exit 0

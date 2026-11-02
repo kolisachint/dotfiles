@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────────────────────
+#  Ghostty config — Catppuccin Latte (day) / Mocha (night), high legibility
+#  Managed setup: hoocode + oh-my-zsh + powerlevel10k
+# ─────────────────────────────────────────────────────────────
+
+# ── Theme ────────────────────────────────────────────────────
+# Latte by day, Mocha by night — follows macOS appearance
+theme = "light:Catppuccin Latte,dark:Catppuccin Mocha"
+
+# Never let any app paint text that blends into the background.
+# 1.0 = no enforcement, higher = force legible contrast.
+minimum-contrast = 1.35
+
+# Cursor: big, solid, unmissable.
+cursor-style = block
+cursor-style-blink = true
+cursor-color = #cba6f7
+cursor-text = #1e1e2e
+
+# ── Font: JetBrains Mono Nerd Font (Mono variant: icons take one cell) ─
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 16
+font-thicken = true
+adjust-cell-height = 18%
+font-feature = -liga
+font-feature = -calt
+
+# ── Kitty keyboard protocol (required by hoocode) ────────────
+# Ghostty negotiates the Kitty protocol automatically, which is what
+# lets hoocode see real Alt/Shift/Ctrl chords instead of composed
+# characters. These two lines cover the gaps.
+macos-option-as-alt = true
+keybind = alt+backspace=text:\x1b\x7f
+
+# ── Window / readability ─────────────────────────────────────
+window-padding-x = 14
+window-padding-y = 10
+window-padding-balance = true
+window-inherit-working-directory = true
+window-save-state = always
+window-colorspace = display-p3
+window-theme = system
+macos-titlebar-style = tabs
+background-opacity = 1.0
+
+# Generous default window so long agent output doesn't wrap hard.
+window-width = 190
+window-height = 50
+
+# Scrollback worth having.
+scrollback-limit = 100000
+
+# Quick font-size nudges when eyes get tired.
+keybind = cmd+plus=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+zero=reset_font_size
+
+# ── Shell ────────────────────────────────────────────────────
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title
+copy-on-select = clipboard
+mouse-hide-while-typing = true
+confirm-close-surface = false

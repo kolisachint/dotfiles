@@ -1,0 +1,67 @@
+TMUX CHEAT SHEET
+================
+
+PREFIX = Ctrl-Space  (Ctrl-b also works)
+Press Ctrl-Space, let go, then press the key.
+The status bar shows PREFIX while it waits.
+Ctrl-Space twice = send Ctrl-Space to the app (nvim completion)
+Ctrl-Space ?  lists every key.  q closes it.
+
+
+START WORK
+----------
+  work            session for this folder
+  work ~/proj     session for another folder
+  work -h         help and the layout
+  Ctrl-Space d    detach (everything keeps running)
+  tmux attach     come back later
+
+
+DEFAULT KEYS (prefix Ctrl-Space)
+--------------------------------
+  %  "           split side by side / top-bottom
+  arrows, o       move between panes
+  z               zoom pane / unzoom
+  x               kill pane (y to confirm)
+  c               new window
+  n  p            next / previous window
+  1 to 9          go to window by number
+  ,               rename window
+  w               pick a window (tree view)
+  s               pick a session
+  d               detach
+  [               scroll / copy mode
+                  arrows, PgUp move
+                  q exits copy mode
+  ]               paste
+  Ctrl-arrows     resize pane
+  :               type a tmux command
+  ?               list every key (q closes)
+
+
+PLUGINS
+-------
+  Save session        Ctrl-Space Ctrl-s
+  Restore session     Ctrl-Space Ctrl-r
+  Install plugins     Ctrl-Space I
+  Update plugins      Ctrl-Space U
+  Copy in copy mode   y    (copies to the Mac clipboard)
+
+
+WORKFLOW: WHAT "work" MAKES
+---------------------------
+  Session = folder name.
+
+  1 code     nvim (left) | hoocode (right)
+  2 shell    plain shell
+  3 agents   agent 1 + agent 2 (left)
+             diff (right, agentdiff)
+
+  Pane titles show above each pane.
+  If a program exits, the pane is a shell again.
+
+
+WORKFLOW: AGENTDIFF KEYS
+------------------------
+  r               reset recent changes
+  q               quit

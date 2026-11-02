@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+# agents [folder] — open (or reattach) a tmux session for coding agents.
+#
+#   ┌──────────────────────┬──────────────┐
+#   │ 1: hoocode           │ 2: changes   │
+#   │                      │ (live diff)  │
+#   └──────────────────────┴──────────────┘
+#
+# Session name = folder name. Run it again from anywhere to jump back in.
+
+dir=${1:-$PWD}
+dir=${dir:A}
+name=${${dir:t}//[.:]/_}
+
+~/.config/tmux/scripts/appearance 2>/dev/null
+if ! tmux has-session -t "=$name" 2>/dev/null; then
+  tmux new-session -d -s "$name" -n agent -c "$dir"
+  tmux set -p -t "=${name}:agent.1" @label hoocode
+  tmux send-keys -t "=${name}:agent.1" "hoocode" Enter
+  tmux split-window -h -l 45% -t "=${name}:agent" -c "$dir" ~/.config/tmux/scripts/diffwatch
+  tmux set -p -t "=${name}:agent.2" @label "changes (live)"
+  tmux select-pane -t "=${name}:agent.1"
+fi
+
+if [[ -n $TMUX ]]; then
+  tmux switch-client -t "=$name"
+else
+  tmux attach -t "=$name"
+fi

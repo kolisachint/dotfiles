@@ -1,0 +1,187 @@
+#!/usr/bin/env bash
+# agentdiff — live git diff for a folder that AI agents are editing.
+# RECENT = the last edit burst. ALL = everything since the last commit.
+# Snapshots use a copy of the index, so your real git index is never touched.
+
+EMPTY_TREE=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+usage() {
+  cat <<'EOF'
+usage: agentdiff [dir]    (dir defaults to the current folder)
+RECENT    the last burst of edits: what changed since the burst before it.
+ALL       everything changed since the last commit (HEAD).
+◀ RECENT  marks files changed in the last burst, inside ALL.
+keys: r reset RECENT · q quit
+Nothing is staged or committed. Your git index is never touched.
+EOF
+}
+
+case ${1:-} in
+  -h|--help) usage; exit 0 ;;
+esac
+if [ $# -gt 1 ]; then
+  usage >&2
+  exit 2
+fi
+
+DIR=${1:-$PWD}
+if ! cd "$DIR" 2>/dev/null; then
+  echo "agentdiff: cannot open folder: $DIR" >&2
+  exit 1
+fi
+if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" != true ]; then
+  echo "agentdiff: $DIR is not a git work tree." >&2
+  exit 1
+fi
+
+TOP=$(git rev-parse --show-toplevel) || exit 1
+cd "$TOP" || exit 1
+GITDIR=$(git rev-parse --absolute-git-dir)
+STATE="$GITDIR/agentdiff"
+mkdir -p "$STATE"
+rm -f "$STATE/index.lock"
+REPO=$(basename "$TOP")
+WORK=$(mktemp -d "${TMPDIR:-/tmp}/agentdiff.XXXXXX")
+HAVE_DELTA=""
+command -v delta >/dev/null 2>&1 && HAVE_DELTA=1
+
+cleanup() { rm -rf "$WORK"; }
+trap cleanup EXIT
+trap 'exit 0' INT TERM
+
+snapshot() {
+  cp "$GITDIR/index" "$STATE/index" 2>/dev/null || rm -f "$STATE/index"
+  GIT_INDEX_FILE="$STATE/index" git add -A -- . >/dev/null 2>&1
+  GIT_INDEX_FILE="$STATE/index" git write-tree 2>/dev/null
+}
+
+# Print the stat block from stdin, adding "  ◀ RECENT" to files in the last burst.
+mark_recent() {
+  awk -v rf="$WORK/recent" '
+    BEGIN { while ((getline l < rf) > 0) r[l] = 1; close(rf) }
+    {
+      line = $0
+      if (index(line, " | ") > 0) {
+        p = substr(line, 1, index(line, " | ") - 1)
+        sub(/^ +/, "", p)
+        hit = (p in r)
+        if (!hit && substr(p, 1, 3) == "...") {
+          q = substr(p, 4); n = length(q)
+          for (k in r)
+            if (length(k) >= n && substr(k, length(k) - n + 1) == q) { hit = 1; break }
+        }
+        if (hit) line = line "  ◀ RECENT"
+      }
+      print line
+    }'
+}
+
+show_diff() {
+  if [ -n "$HAVE_DELTA" ]; then
+    git diff "$1" "$2" | delta --light --line-numbers --paging=never \
+      --width="$COLS" --file-style='bold ul'
+  else
+    git diff --color=always "$1" "$2"
+  fi
+}
+
+render() {
+  COLS=$(tput cols 2>/dev/null || echo 100)
+  OUT="$WORK/out"
+  BASE=$(git rev-parse -q --verify HEAD 2>/dev/null)
+  [ -n "$BASE" ] || BASE=$EMPTY_TREE
+  BRANCH=$(git symbolic-ref --short -q HEAD 2>/dev/null)
+  [ -n "$BRANCH" ] || BRANCH="detached"
+  git -c core.quotePath=off diff --name-only "$PREV" "$CUR" > "$WORK/recent" 2>/dev/null
+  BURST_LABEL=$BURST_TIME
+  [ -n "$BURST_LABEL" ] || BURST_LABEL="--:--:--"
+  {
+    printf 'agentdiff · %s · %s · updated %s\n' "$REPO" "$BRANCH" "$(date +%H:%M:%S)"
+    printf '━━ RECENT · last edit burst at %s ━━\n' "$BURST_LABEL"
+    if [ "$PREV" = "$CUR" ]; then
+      echo "(no new edits yet)"
+    else
+      git diff --stat="$COLS" "$PREV" "$CUR"
+      show_diff "$PREV" "$CUR"
+    fi
+    echo
+    printf '━━ ALL · since last commit (HEAD) ━━\n'
+    STAT_ALL=$(git diff --stat="$COLS" "$BASE" "$CUR")
+    if [ -z "$STAT_ALL" ]; then
+      echo "(no changes since last commit)"
+    else
+      printf '%s\n' "$STAT_ALL" | mark_recent
+      show_diff "$BASE" "$CUR"
+    fi
+    echo
+    echo "keys: r reset recent · q quit · scroll: Ctrl-Space ["
+  } > "$OUT"
+  printf '\033[H\033[2J\033[3J'
+  cat "$OUT"
+}
+
+CHECKPOINT=$(snapshot)
+if [ -z "$CHECKPOINT" ]; then
+  echo "agentdiff: could not read the working tree." >&2
+  exit 1
+fi
+PREV=$CHECKPOINT
+CUR=$CHECKPOINT
+LAST=$CHECKPOINT
+STABLE=0
+BURST_TIME=""
+HEAD_SEEN=$(git rev-parse -q --verify HEAD 2>/dev/null)
+render
+
+TTY=""
+[ -t 0 ] && TTY=1
+
+while :; do
+  key=""
+  if [ -n "$TTY" ]; then
+    read -r -t 1 -n 1 -s key
+  else
+    sleep 1
+  fi
+
+  case $key in
+    q|Q) exit 0 ;;
+  esac
+
+  snap=$(snapshot)
+
+  if [ "$key" = r ]; then
+    if [ -n "$snap" ]; then
+      CHECKPOINT=$snap; PREV=$snap; CUR=$snap; LAST=$snap; STABLE=0
+    fi
+    render
+    continue
+  fi
+
+  redraw=""
+  if [ -n "$snap" ]; then
+    if [ "$snap" = "$LAST" ]; then
+      STABLE=$((STABLE + 1))
+    else
+      LAST=$snap
+      STABLE=0
+    fi
+    if [ "$STABLE" -ge 2 ] && [ "$LAST" != "$CHECKPOINT" ]; then
+      PREV=$CHECKPOINT
+      CUR=$LAST
+      CHECKPOINT=$CUR
+      BURST_TIME=$(date +%H:%M:%S)
+      redraw=1
+    fi
+  fi
+
+  head=$(git rev-parse -q --verify HEAD 2>/dev/null)
+  if [ "$head" != "$HEAD_SEEN" ]; then
+    HEAD_SEEN=$head
+    redraw=1
+  fi
+
+  if [ -n "$redraw" ]; then
+    render
+  fi
+done

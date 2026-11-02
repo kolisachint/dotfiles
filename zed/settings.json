@@ -1,0 +1,104 @@
+// Zed settings, matched to the Neovim setup in ~/.config/nvim
+// Previous version: ~/.config/zed/backups/
+// Keys: ~/.config/zed/keymap.json   Media tasks: ~/.config/zed/tasks.json
+//
+// To see all of Zed's default settings, run `zed: open default settings`
+// from the command palette (cmd-shift-p).
+{
+  // ── Kept from your previous settings ──
+  "telemetry": { "diagnostics": false, "metrics": false },
+  "reduce_motion": "on",
+  "base_keymap": "VSCode",
+  "max_tabs": 8,
+  "cursor_blink": false,
+  "minimap": { "show": "never" },
+  "selection_highlight": false,
+  "colorize_brackets": false,
+  "show_whitespaces": "none",
+  "show_edit_predictions": false, // no AI in the editor (same as Neovim)
+  "terminal": { "max_scroll_history_lines": 1000 },
+  "project_panel": { "hide_gitignore": true, "auto_reveal_entries": true },
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.DS_Store",
+    "**/__pycache__",
+    "**/*.pyc",
+    "**/.pytest_cache",
+    "**/.mypy_cache",
+    "..."
+  ],
+
+  // ── Theme: Catppuccin Latte (day) / Mocha (night), follows macOS ──
+  "theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Mocha"
+  },
+  "icon_theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Mocha"
+  },
+  "auto_install_extensions": {
+    "catppuccin": true, // theme
+    "catppuccin-icons": true, // file icons
+    "lua": true, // Lua language server
+    "basher": true, // Bash language server
+    "toml": true
+  },
+
+  // ── Fonts (same font as Ghostty) ──
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
+
+  // ── Vim keys, same as Neovim ──
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "always", // y / p share the Mac clipboard
+    "use_smartcase_find": true
+  },
+  "which_key": { "enabled": true, "delay_ms": 400 }, // press Space and wait
+  "vertical_scroll_margin": 8, // scrolloff = 8
+
+  // ── Readability (matches Neovim's [read] settings) ──
+  "soft_wrap": "editor_width", // long lines wrap
+  "current_line_highlight": "all", // highlight the line AND its number
+  "indent_guides": { "enabled": true },
+  "status_bar": { "cursor_position_button": true },
+  "diagnostics": {
+    "inline": { "enabled": true } // error text shown on the line
+  },
+  "scrollbar": { "diagnostics": "all" }, // error marks in the scrollbar
+
+  // ── Code help: autocomplete, signature help, semantic colors ──
+  "show_completions_on_input": true,
+  "auto_signature_help": true,
+  "show_signature_help_after_edits": true,
+  "semantic_tokens": "combined",
+  "inlay_hints": { "enabled": false },
+
+  // ── Format on save (same tools as Neovim) ──
+  "format_on_save": "on",
+  "remove_trailing_whitespace_on_save": true,
+  "ensure_final_newline_on_save": true,
+  "languages": {
+    "Python": {
+      "language_servers": ["basedpyright", "ruff", "!pyright", "!pylsp"],
+      "formatter": [
+        { "code_action": "source.organizeImports.ruff" },
+        { "language_server": { "name": "ruff" } }
+      ]
+    },
+    "Markdown": { "format_on_save": "on", "soft_wrap": "editor_width" }
+  },
+
+  // ── Git ──
+  "git": {
+    "git_gutter": "tracked_files", // change marks in the margin
+    "inline_blame": { "enabled": false }, // toggle with Space g l
+    "hunk_style": "staged_hollow"
+  },
+  "diff_view_style": "split", // side-by-side diffs; both sides scroll together
+  "git_panel": { "dock": "right" } // tree on the left, git on the right
+}

@@ -1,0 +1,97 @@
+// Keys matched to ~/.config/nvim. Space is the leader in Vim normal mode.
+// Press Space and wait: the which-key popup lists everything.
+// Zed's Vim mode already gives: gd definition, gD declaration, gr references,
+// K hover, ]d / [d next / previous error, u undo, Ctrl-r redo, -- etc.
+[
+  {
+    // Editor, Vim normal + visual mode
+    "context": "Editor && vim_mode == normal && !menu",
+    "bindings": {
+      // Files and windows
+      "ctrl-p": "file_finder::Toggle",
+      "ctrl-n": "workspace::ToggleLeftDock",
+      "ctrl-s": "workspace::Save",
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "space e": "project_panel::ToggleFocus",
+      "-": "pane::RevealInProjectPanel",
+
+      // Find
+      "space f g": "pane::DeploySearch",
+      "space f b": "tab_switcher::Toggle",
+      "space f r": "projects::OpenRecent",
+      "space f s": "outline::Toggle",
+
+      // Code
+      "space c r": "editor::Rename",
+      "space c a": "editor::ToggleCodeActions",
+      "space c f": "editor::Format",
+      "space c d": "editor::Hover",
+
+      // Errors list
+      "space x x": "diagnostics::Deploy",
+      "space x s": "outline_panel::ToggleFocus",
+
+      // Markdown
+      "space m p": "markdown::OpenPreviewToTheSide",
+
+      // Git: changes in this file
+      "] h": "editor::GoToHunk",
+      "[ h": "editor::GoToPreviousHunk",
+      "space g p": "editor::ToggleSelectedDiffHunks",
+      "space g a": "git::ToggleStaged",
+      "space g r": "git::Restore",
+      "space g A": "git::StageFile",
+      "space g b": "git::Blame",
+      "space g l": "editor::ToggleGitBlameInline",
+      "space g h": "git::FileHistory",
+
+      // Git: big views
+      "space g g": "git_panel::ToggleFocus",
+      "space g d": "git::Diff",
+      "space g D": "git::BranchDiff",
+      "space g c": "git::Commit",
+      "space g s": "git_panel::ToggleFocus",
+
+      // Media (see tasks.json)
+      "space o o": ["task::Spawn", { "task_name": "Open with default app" }],
+      "space o p": ["task::Spawn", { "task_name": "Play media (ffplay)" }],
+      "space o s": ["task::Spawn", { "task_name": "Stop playback" }],
+      "space o f": "editor::RevealInFileManager"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == visual && !menu",
+    "bindings": {
+      "space g a": "git::ToggleStaged",
+      "space g r": "git::Restore"
+    }
+  },
+  {
+    // Any mode: save
+    "context": "Editor",
+    "bindings": {
+      "ctrl-s": "workspace::Save"
+    }
+  },
+  {
+    // File tree on the left
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "ctrl-n": "workspace::ToggleLeftDock",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-p": "file_finder::Toggle",
+      "space o o": "project_panel::OpenWithSystem",
+      "space o f": "project_panel::RevealInFileManager",
+      "space g g": "git_panel::ToggleFocus"
+    }
+  },
+  {
+    // Git panel on the right
+    "context": "GitPanel && !CommitEditor",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "space g g": "workspace::ToggleRightDock"
+    }
+  }
+]
