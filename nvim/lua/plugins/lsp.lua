@@ -53,7 +53,12 @@ return {
     version = "1.*", -- prebuilt fuzzy matcher binary
     event = { "InsertEnter", "CmdlineEnter" },
     opts = {
-      keymap = { preset = "default" }, -- Ctrl-y accept, Ctrl-n/p move, Ctrl-space open
+      keymap = {
+        preset = "default", -- Ctrl-y accept, Ctrl-n/p move, Ctrl-space open
+        -- Ctrl-Space is the rex/tmux prefix and never reaches nvim;
+        -- Ctrl-] force-shows docs instead (insert-mode abbrev-expand is the trade).
+        ["<C-]>"] = { "show_documentation", "hide_documentation" },
+      },
       appearance = { nerd_font_variant = "mono" },
       completion = {
         menu = { border = "rounded" },

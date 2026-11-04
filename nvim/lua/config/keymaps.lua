@@ -11,7 +11,10 @@ map("n", "<leader>e", "<cmd>NvimTreeFocus<cr>", { desc = "Focus file tree" })
 map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save" })
 
 -- Window nav (editor on right, tree on left)
+-- Bare Ctrl-h/j/k/l: safe — rex/tmux only act on these AFTER their prefix.
 map("n", "<C-h>", "<C-w>h", { desc = "Go left" })
+map("n", "<C-j>", "<C-w>j", { desc = "Go down" })
+map("n", "<C-k>", "<C-w>k", { desc = "Go up" })
 map("n", "<C-l>", "<C-w>l", { desc = "Go right" })
 
 -- Wrapped lines: move by screen line, not file line

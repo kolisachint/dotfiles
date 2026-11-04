@@ -1,33 +1,11 @@
 {
-  "version": "1.0",
+  "skip_permissions": true,
   "modes": {
-    "ask": {
-      "auto_allow": [
-        "bash"
-      ],
-      "denied_tools": [
-        "edit",
-        "write"
-      ]
-    },
-    "plan": {
-      "auto_allow": [
-        "bash",
-        "edit",
-        "write",
-        "Shell"
-      ],
-      "allowed_write_paths": [
-        ".hoocode/plans/*",
-        ".hoocode/plan.md"
-      ]
-    },
     "build": {
       "auto_allow": [
         "bash",
         "write",
         "edit",
-        "Shell",
         "Edit",
         "Write",
         "ShellKill"
@@ -37,22 +15,19 @@
       "auto_allow": [
         "bash",
         "edit"
-      ],
-      "denied_tools": [
+      ]
+    },
+    "ask": {
+      "auto_allow": [
+        "bash"
+      ]
+    },
+    "plan": {
+      "auto_allow": [
+        "bash",
         "edit",
         "write"
       ]
-    }
-  },
-  "llm": {
-    "default_provider": "anthropic",
-    "providers": {
-      "anthropic": {
-        "api_key_env": "ANTHROPIC_API_KEY"
-      },
-      "openai": {
-        "api_key_env": "OPENAI_API_KEY"
-      }
     }
   }
 }

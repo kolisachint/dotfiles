@@ -3,7 +3,7 @@
 -- Everything lives in lua/:
 --   config/options.lua   editor options + readability
 --   config/keymaps.lua   VSCode/Zed muscle-memory keys
---   config/autocmds.lua  filetype tweaks, tree on startup
+--   config/autocmds.lua  filetype tweaks, session restore (no tree auto-open)
 --   config/media.lua     open / play images, video, audio
 --   config/lazy.lua      plugin manager bootstrap
 --   plugins/*.lua        one file per plugin group
