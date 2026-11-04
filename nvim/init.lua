@@ -5,16 +5,18 @@
 --   config/keymaps.lua   VSCode/Zed muscle-memory keys
 --   config/autocmds.lua  filetype tweaks, session restore (no tree auto-open)
 --   config/media.lua     open / play images, video, audio
---   config/lazy.lua      plugin manager bootstrap
+--   config/tabline.lua   filename-only tab bar (shows with 2+ tabs)
+--   config/lazy.lua        plugin manager bootstrap
 --   plugins/*.lua        one file per plugin group
 -- Previous single-file config: backups/init.lua.*
 
 -- Leader first (plugins read it at load time)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader = ";"
+vim.g.maplocalleader = ";"
 
 require("config.options")
 require("config.lazy")
 require("config.keymaps")
 require("config.autocmds")
+require("config.tabline").setup()
 require("config.media").setup()

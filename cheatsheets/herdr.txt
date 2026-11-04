@@ -30,7 +30,7 @@ AGENTS + CHANGES
                 (stays open for that space)
   Files         button, top right: file tree
   Click a file in Changes to see its diff.
-  Deeper look:  Cmd D, then  nvim  then  Space g d
+  Deeper look:  Cmd D, then  nvim  then  ; g d
 
 
 TABS

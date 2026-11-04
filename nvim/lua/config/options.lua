@@ -31,9 +31,9 @@ opt.inccommand = "split" -- live preview of :s substitutions
 -- Reload files that an AI agent or another program changed on disk
 opt.autoread = true
 
--- Free screen rows: no tab bar (even when diffview opens a tab), no
--- command line unless typing : or /, no mode text (lualine shows it).
-opt.showtabline = 0
+-- Free screen rows: tab bar only when 2+ tabs exist (diffview, :tabedit),
+-- no command line unless typing : or /, no mode text (lualine shows it).
+opt.showtabline = 1
 opt.cmdheight = 0
 opt.showmode = false
 -- Fewer "Press ENTER" prompts and extra messages

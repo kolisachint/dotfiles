@@ -1,5 +1,5 @@
 -- Keymaps (VSCode/Zed muscle memory). Plugin keys live in their plugin file.
--- Press <Space> and wait: which-key lists everything.
+-- Press ; and wait: which-key lists everything.
 local map = vim.keymap.set
 
 -- Tree
@@ -23,6 +23,17 @@ map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true
 
 -- Clear search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
+
+-- Tabs (bar appears only with 2+ tabs; labels in config/tabline.lua)
+-- gt / gT also work natively. Numbers match the tabline labels.
+map("n", "]t", "<cmd>tabnext<cr>", { desc = "Next tab" })
+map("n", "[t", "<cmd>tabprevious<cr>", { desc = "Previous tab" })
+map("n", "<leader>te", "<cmd>tabedit<cr>", { desc = "New tab" })
+map("n", "<leader>tx", "<cmd>tabclose<cr>", { desc = "Close tab" })
+map("n", "<leader>to", "<cmd>tabonly<cr>", { desc = "Close other tabs" })
+for i = 1, 9 do
+  map("n", "<leader>t" .. i, i .. "gt", { desc = "Go to tab " .. i })
+end
 
 -- Markdown
 map("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Browser markdown preview" })
