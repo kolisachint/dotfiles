@@ -1,12 +1,38 @@
 -- Tabline: one label per tab, filename only, active tab highlighted.
 -- Visible only when 2+ tabs exist (opt.showtabline = 1 in options.lua).
--- Active/inactive colors come from the colorscheme (TabLineSel/TabLine),
--- so they follow Catppuccin Latte/Mocha. Tab number is text too, so the
--- active tab isn't carried by color alone.
+-- Colors are set explicitly from the Catppuccin palette (Latte/Mocha) so
+-- the active tab is a solid blue pill, readable in both flavors -- the
+-- stock TabLineSel wash is too low-contrast. Tab number is text too, so
+-- the active tab isn't carried by color alone.
 local M = {}
+
+-- [read] Explicit tabline colors: re-applied after every :colorscheme
+-- (colorschemes clear custom highlights), including the auto light/dark
+-- switch in plugins/ui.lua which re-sets the colorscheme.
+local function apply_colors()
+  local ok, palettes = pcall(require, "catppuccin.palettes")
+  local p
+  if ok then
+    p = palettes.get_palette()
+  else -- fallback if catppuccin isn't loaded yet
+    local dark = vim.o.background ~= "light"
+    p = dark
+      and { base = "#1e1e2e", mantle = "#181825", blue = "#89b4fa", subtext0 = "#a6adc8" }
+      or { base = "#eff1f5", mantle = "#e6e9ef", blue = "#1e66f5", subtext0 = "#6c6f85" }
+  end
+  vim.api.nvim_set_hl(0, "TabLineSel", { fg = p.base, bg = p.blue, bold = true })
+  vim.api.nvim_set_hl(0, "TabLine", { fg = p.subtext0, bg = p.mantle })
+  vim.api.nvim_set_hl(0, "TabLineFill", { bg = p.base })
+end
 
 function M.setup()
   vim.o.tabline = "%!v:lua.require('config.tabline').render()"
+  apply_colors()
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    group = vim.api.nvim_create_augroup("TablineColors", { clear = true }),
+    callback = apply_colors,
+    desc = "Re-apply tabline colors after colorscheme change",
+  })
 end
 
 local function icon_for(basename)
