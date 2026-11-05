@@ -1,8 +1,8 @@
 -- ~/.config/rex/init.lua — Rex keys, mirroring tmux.conf + herdr config.toml
 --
--- Prefix is Ctrl-g, same as tmux and herdr (2026-11-04: user picked Ctrl-g;
--- C-b falls through to shell/readline. Ctrl-Space stays free so it reaches
--- nvim completion directly.)
+-- Prefix is Ctrl-b, same as herdr (tmux: Ctrl-Space primary + Ctrl-b backup).
+-- Switched 2026-11-05 from Ctrl-g to Ctrl-b to match herdr.
+-- Ctrl-Space stays free so it reaches nvim completion directly.
 -- Press the prefix, let go, then the key. Escape cancels a half-typed prefix.
 -- Rex's own Cmd shortcuts (Cmd-D, Cmd-T, Cmd-1..9, Cmd-K …) still work.
 --
@@ -12,11 +12,11 @@
 -- Cheat sheet:  ~/.config/rex/cheatsheet.txt
 
 local function prefixed(key, action, args)
-  rex.bind("ctrl+g>" .. key, action, args)
+  rex.bind("ctrl+b>" .. key, action, args)
 end
 
 -- Prefix twice sends it on to the app
-rex.bind("ctrl+g>ctrl+g", "pane.send_key", { key = "ctrl+g" })
+rex.bind("ctrl+b>ctrl+b", "pane.send_key", { key = "ctrl+b" })
 
 -- ── Splits ─────────────────────────────────────────────────
 -- tmux defaults: %  side by side,  "  top / bottom

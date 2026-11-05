@@ -11,8 +11,8 @@
 -- Previous single-file config: backups/init.lua.*
 
 -- Leader first (plugins read it at load time)
-vim.g.mapleader = ";"
-vim.g.maplocalleader = ";"
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 require("config.options")
 require("config.lazy")

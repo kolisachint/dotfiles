@@ -1,5 +1,5 @@
 -- Keymaps (VSCode/Zed muscle memory). Plugin keys live in their plugin file.
--- Press ; and wait: which-key lists everything.
+-- Press Space and wait: which-key lists everything.
 local map = vim.keymap.set
 
 -- Tree
@@ -26,6 +26,17 @@ map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
 -- Tabs (bar appears only with 2+ tabs; labels in config/tabline.lua)
 -- gt / gT also work natively. Numbers match the tabline labels.
+-- <Tab> / <S-Tab> cycle tabs (VSCode/Zed muscle memory). <Tab> is the
+-- same keycode as <C-I> (jump forward), so with a single tab it keeps
+-- the jump behaviour instead of doing nothing.
+map("n", "<Tab>", function()
+  if #vim.api.nvim_list_tabpages() > 1 then
+    vim.cmd.tabnext()
+  else
+    vim.cmd("normal! \15") -- <C-I>: jump forward (normal! skips this mapping)
+  end
+end, { desc = "Next tab" })
+map("n", "<S-Tab>", "<cmd>tabprevious<cr>", { desc = "Previous tab" })
 map("n", "]t", "<cmd>tabnext<cr>", { desc = "Next tab" })
 map("n", "[t", "<cmd>tabprevious<cr>", { desc = "Previous tab" })
 map("n", "<leader>te", "<cmd>tabedit<cr>", { desc = "New tab" })

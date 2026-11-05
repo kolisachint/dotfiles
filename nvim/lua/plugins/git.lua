@@ -1,4 +1,4 @@
--- Git inside Neovim. Press ;g and wait: which-key lists all git keys.
+-- Git inside Neovim. Press Space g and wait: which-key lists all git keys.
 --
 --   <leader>gg  Neogit: status screen (stage, commit, push, pull, log)
 --   <leader>gd  Diff of every changed file, side by side (diffview)

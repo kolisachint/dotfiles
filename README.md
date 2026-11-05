@@ -10,7 +10,7 @@ Sachin's Mac setup. **Private repo.** No secrets live here.
 | `ghostty/` | Ghostty terminal | `~/.config/ghostty/config` |
 | `tmux/` | tmux (prefix Ctrl-Space) | `~/.config/tmux/` |
 | `nvim/` | Neovim (lazy.nvim) | `~/.config/nvim/` |
-| `rex/` | Rex terminal (Ctrl-g prefix, AAA themes) | `~/.config/rex/` |
+| `rex/` | Rex terminal (Ctrl-b prefix, AAA themes) | `~/.config/rex/` |
 | `herdr/`, `herdr-app/` | Herdr TUI + app | `~/.config/herdr*/` |
 | `hoocode/` | hoocode agent rules, modes, live-diff | `~/.hoocode/`, `~/.config/hoocode/` |
 | `git/` | git identity (noreply email) | `~/.config/git/` |

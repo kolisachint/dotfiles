@@ -1,12 +1,12 @@
 REX CHEAT SHEET                                   (q closes this)
 ===============
 
-PREFIX = Ctrl-g — same as tmux and herdr.
-Press Ctrl-g, let go, then press the key.
+PREFIX = Ctrl-b — same as herdr (tmux: Ctrl-Space + Ctrl-b backup).
+Press Ctrl-b, let go, then press the key.
 Rex shows the next possible keys while it waits. Escape cancels.
-Ctrl-g twice = send Ctrl-g to the app.
-(Ctrl-Space now passes straight through: nvim completion.)
-Ctrl-g ?  shows this sheet.
+Ctrl-b twice = send Ctrl-b to the app.
+(Ctrl-Space still passes straight through: nvim completion.)
+Ctrl-b ?  shows this sheet.
 
 
 PANES
@@ -79,7 +79,7 @@ CONFIG
 
 UNIFIED WITH TMUX + NVIM (2026-11-04)
 =====================================
-  prefix ............ Ctrl-g — rex + tmux + herdr
+  prefix ............ Ctrl-b — rex + herdr (tmux: Ctrl-Space + Ctrl-b backup)
   % / v ............. split right — both
   " / - ............. split down — both
   h j k l / arrows .. focus pane — both (Tab / S-Tab cycle too)
@@ -94,6 +94,6 @@ UNIFIED WITH TMUX + NVIM (2026-11-04)
   b / : / / / [ ] ... sidebar / command / find / prompts — rex app layer
   ? ................. this sheet — both
   nvim .............. bare Ctrl-h/j/k/l nav, Ctrl-n tree, Ctrl-s save,
-                      Ctrl-p find (Telescope), ; = leader.
+                      Ctrl-p find (Telescope), Space = leader.
                       Ctrl-Space is FREE — goes straight to nvim completion.
                       completion docs: Ctrl-Space directly (Ctrl-] backup).

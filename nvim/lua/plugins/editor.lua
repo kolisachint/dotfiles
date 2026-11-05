@@ -48,7 +48,7 @@ return {
 
   -- Git: see plugins/git.lua
 
-  -- Press ; and wait: popup lists every key
+  -- Press Space and wait: popup lists every key
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
