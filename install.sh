@@ -29,10 +29,10 @@ tmux/scripts                         .config/tmux/scripts
 nvim/init.lua                        .config/nvim/init.lua
 nvim/lua                             .config/nvim/lua
 nvim/lazy-lock.json                  .config/nvim/lazy-lock.json
+rex                                .config/rex
 herdr/config.toml                    .config/herdr/config.toml
 herdr-app/settings.json              .config/herdr-app/settings.json
 herdr-app/layouts                    .config/herdr-app/layouts
-hoocode/AGENTS.md                    .hoocode/AGENTS.md
 hoocode/hoo-config.json              .hoocode/hoo-config.json
 hoocode/hoocode-watch                .config/hoocode/hoocode-watch
 git/config                           .config/git/config

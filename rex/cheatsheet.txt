@@ -1,0 +1,99 @@
+REX CHEAT SHEET                                   (q closes this)
+===============
+
+PREFIX = Ctrl-g — same as tmux and herdr.
+Press Ctrl-g, let go, then press the key.
+Rex shows the next possible keys while it waits. Escape cancels.
+Ctrl-g twice = send Ctrl-g to the app.
+(Ctrl-Space now passes straight through: nvim completion.)
+Ctrl-g ?  shows this sheet.
+
+
+PANES
+-----
+  %  or  v        split side by side
+  "  or  -        split top / bottom
+  arrows, h j k l move between panes
+  o, Tab          next pane   (Shift-Tab previous)
+  z               zoom pane / unzoom
+  x               close pane
+  f               float pane
+  {  }            move pane left / right
+  =               balance splits
+  Ctrl-arrows     resize pane one step
+  r               resize mode: arrows / h j k l
+                  Shift = big steps, = balances
+                  Enter or Esc leaves
+
+
+TABS  (tmux windows)
+--------------------
+  c               new tab
+  n  p            next / previous tab
+  1 to 9          go to tab by number
+  ,  or  T        rename tab
+  X               close tab
+  <  >            move tab left / right
+
+
+SESSIONS  (herdr workspaces)
+----------------------------
+  s  or  w        pick a session
+  N               new session
+  W               rename session
+  D               close session
+  (  )            previous / next session
+
+
+APP
+---
+  b               toggle sidebar
+  :               command palette
+  /               find in scrollback
+  [  ]            jump to previous / next prompt
+  g               go to directory
+  R               reload config
+
+
+REX'S OWN CMD KEYS (no prefix)
+------------------------------
+  Cmd-T  Cmd-W    new tab / close
+  Cmd-1..9        go to tab
+  Cmd-D           split right    Shift-Cmd-D  split down
+  Opt-Cmd-arrows  move between panes
+  Shift-Cmd-Enter zoom pane
+  Cmd-K           change session
+  Shift-Cmd-P     command palette
+  Cmd-F           find
+  Cmd-/           toggle sidebar
+  Cmd-+  Cmd--  Cmd-0   font size
+
+
+CONFIG
+------
+  ~/.config/rex/init.lua     keys
+  rex config check           check edits
+  rex config reload          apply (or prefix R)
+  rex keymap                 list every key
+
+
+UNIFIED WITH TMUX + NVIM (2026-11-04)
+=====================================
+  prefix ............ Ctrl-g — rex + tmux + herdr
+  % / v ............. split right — both
+  " / - ............. split down — both
+  h j k l / arrows .. focus pane — both (Tab / S-Tab cycle too)
+  z / = ............. zoom / balance — both
+  x ................. close pane (tmux asks, rex kills)
+  Ctrl-arrows ....... resize step — both (rex also: r = resize mode)
+  c / n / p / 1-9 ... tabs — both
+  , ................. rename tab — both
+  < > ............... move tab — both (tmux 2026-11-04, rex has it)
+  & (tmux) / X (rex)  close tab — DIFFERENT on purpose (tmux confirms)
+  s / w / d ......... sessions: pick / tree / detach
+  b / : / / / [ ] ... sidebar / command / find / prompts — rex app layer
+  ? ................. this sheet — both
+  nvim .............. bare Ctrl-h/j/k/l nav, Ctrl-n tree, Ctrl-s save,
+                      Ctrl-p find (Telescope), ; = leader.
+                      Ctrl-Space is FREE — goes straight to nvim completion.
+                      completion docs: Ctrl-Space directly (Ctrl-] backup).
