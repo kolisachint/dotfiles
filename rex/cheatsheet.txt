@@ -1,12 +1,13 @@
 REX CHEAT SHEET                                   (q closes this)
 ===============
 
-PREFIX = Ctrl-b — same as herdr (tmux: Ctrl-Space + Ctrl-b backup).
-Press Ctrl-b, let go, then press the key.
+PREFIX = Ctrl-b — shared spine (same as herdr, tmux backup).
+ALIAS  = Cmd-b — rex-only, same second key. Either leader works.
+Press the leader, let go, then press the key.
 Rex shows the next possible keys while it waits. Escape cancels.
-Ctrl-b twice = send Ctrl-b to the app.
+Leader twice = send Ctrl-b to the app.
 (Ctrl-Space still passes straight through: nvim completion.)
-Ctrl-b ?  shows this sheet.
+Ctrl-b ? or Cmd-b ?  shows this sheet.
 
 
 PANES

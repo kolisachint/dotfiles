@@ -1,6 +1,8 @@
 -- ~/.config/rex/init.lua — Rex keys, mirroring tmux.conf + herdr config.toml
 --
 -- Prefix is Ctrl-b, same as herdr (tmux: Ctrl-Space primary + Ctrl-b backup).
+-- Cmd-b is a rex-only alias leader: same second keystroke, either works.
+-- Train Ctrl-b (it works in all three); Cmd-b is thumb-friendly speed.
 -- Switched 2026-11-05 from Ctrl-g to Ctrl-b to match herdr.
 -- Ctrl-Space stays free so it reaches nvim completion directly.
 -- Press the prefix, let go, then the key. Escape cancels a half-typed prefix.
@@ -13,10 +15,12 @@
 
 local function prefixed(key, action, args)
   rex.bind("ctrl+b>" .. key, action, args)
+  rex.bind("cmd+b>" .. key, action, args)
 end
 
--- Prefix twice sends it on to the app
+-- Leader twice sends Ctrl-b on to the app
 rex.bind("ctrl+b>ctrl+b", "pane.send_key", { key = "ctrl+b" })
+rex.bind("cmd+b>cmd+b", "pane.send_key", { key = "ctrl+b" })
 
 -- ── Splits ─────────────────────────────────────────────────
 -- tmux defaults: %  side by side,  "  top / bottom
