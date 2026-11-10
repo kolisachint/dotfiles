@@ -22,6 +22,7 @@ zsh/.zshrc                           .config/zsh/.zshrc
 zsh/.zprofile                        .config/zsh/.zprofile
 zsh/.p10k.zsh                        .config/zsh/.p10k.zsh
 ghostty/config                       .config/ghostty/config
+ghostty/themes                       .config/ghostty/themes
 tmux/tmux.conf                       .config/tmux/tmux.conf
 tmux/cheatsheet.txt                  .config/tmux/cheatsheet.txt
 tmux/themes                          .config/tmux/themes
@@ -49,6 +50,7 @@ zed/settings.json                    .config/zed/settings.json
 zed/keymap.json                      .config/zed/keymap.json
 zed/tasks.json                      .config/zed/tasks.json
 ardia/config.json                 .config/ardia/config.json
+ardia/themes                       .config/ardia/themes
 cheatsheets                          .config/cheatsheets
 "
 
@@ -108,6 +110,16 @@ while read -r src dst; do
   [[ -z ${src:-} ]] && continue
   link_one "$src" "$dst"
 done <<< "$LINKS"
+
+# hoocode theme pair: settings.json is live-managed (API key + hoocode
+# rewrites inside), so --check only verifies it matches the dotfiles spine.
+# Fix with the /theme picker, never by hand-editing blindly.
+if grep -q '"theme": "auto:catppuccin-latte:catppuccin-mocha"' "$HOME/.hoocode/settings.json" 2>/dev/null; then
+  [[ $MODE == --check ]] && line "OK" "~/.hoocode/settings.json theme pair"
+else
+  line "THEME" "~/.hoocode/settings.json — set theme to auto:catppuccin-latte:catppuccin-mocha (/theme)"
+  [[ $MODE == --check ]] && drift=$(( drift + 1 ))
+fi
 
 if [[ $MODE == --check ]]; then
   echo

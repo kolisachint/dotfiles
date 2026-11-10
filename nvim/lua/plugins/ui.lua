@@ -13,6 +13,26 @@ return {
       require("catppuccin").setup({
         flavour = "auto",
         background = { light = "latte", dark = "mocha" },
+        -- WCAG AAA (>= 7:1 on every surface): same hues, OKLCH lightness
+        -- nudges. Generated like rex/themes/make_aaa.py; text >= 10:1.
+        color_overrides = {
+          latte = {
+            rosewater = "#6c2517", flamingo = "#751822", pink = "#74015f",
+            mauve = "#5407a0", red = "#7e011d", maroon = "#7c091e",
+            peach = "#6d2500", yellow = "#583404", green = "#0f4601",
+            teal = "#024347", sky = "#02415c", sapphire = "#02434e",
+            blue = "#033394", lavender = "#292b9b", text = "#21223a",
+            subtext1 = "#383b51", subtext0 = "#393b4f",
+            overlay2 = "#393b4d", overlay1 = "#393b4b",
+            overlay0 = "#383c49",
+          },
+          mocha = {
+            mauve = "#d6b5fe", red = "#feacc1", maroon = "#fbaeba",
+            sapphire = "#7acef3", blue = "#a1c5fe", lavender = "#b5bfff",
+            text = "#dde5ff", subtext0 = "#bbc2dd", overlay2 = "#bbc2dc",
+            overlay1 = "#bcc2db", overlay0 = "#bdc2da",
+          },
+        },
         integrations = {
           blink_cmp = true,
           gitsigns = true,

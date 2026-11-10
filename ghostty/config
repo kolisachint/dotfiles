@@ -5,7 +5,7 @@
 
 # ── Theme ────────────────────────────────────────────────────
 # Latte by day, Mocha by night — follows macOS appearance
-theme = "light:Catppuccin Latte,dark:Catppuccin Mocha"
+theme = "light:Catppuccin Latte AAA,dark:Catppuccin Mocha AAA"
 
 # Never let any app paint text that blends into the background.
 # 1.0 = no enforcement, higher = force legible contrast.

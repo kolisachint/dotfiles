@@ -10,11 +10,42 @@ onboarding = false
 # Cheat sheet (in a shell): hdkeys
 
 [theme]
-# Catppuccin Latte by day, Mocha by night — follows macOS appearance,
-# same as Ghostty, Neovim and tmux.
+# Catppuccin Latte AAA by day, Mocha AAA by night — follows macOS
+# appearance, same as Ghostty, Neovim and tmux.
+# Herdr has no named custom themes, so AAA rides as per-token overrides
+# on the stock bases. Every pair >= 7:1 (same OKLCH method as
+# rex/themes/make_aaa.py); backgrounds stay stock Catppuccin.
 auto_switch = true
 light_name = "catppuccin-latte"
 dark_name = "catppuccin"
+
+[theme.custom.light]
+text = "#21223a"
+subtext0 = "#393b4f"
+overlay0 = "#383c49"
+overlay1 = "#393b4b"
+accent = "#033394"
+mauve = "#5407a0"
+green = "#0f4601"
+yellow = "#583404"
+red = "#7e011d"
+blue = "#033394"
+teal = "#024347"
+peach = "#6d2500"
+
+[theme.custom.dark]
+text = "#dde5ff"
+subtext0 = "#bbc2dd"
+overlay0 = "#bdc2da"
+overlay1 = "#bcc2db"
+accent = "#a1c5fe"
+mauve = "#d6b5fe"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+red = "#feacc1"
+blue = "#a1c5fe"
+teal = "#94e2d5"
+peach = "#fab387"
 
 [ui]
 sidebar_width = 30

@@ -1,0 +1,35 @@
+{
+  "$schema": "../theme.schema.json",
+  "light": {
+    "panel": "#EFF1F5",
+    "card": "#E6E9EF",
+    "field": "#E6E9EF",
+    "textPrimary": "#21223A",
+    "textTab": "#21223A",
+    "textSecondary": "#393B4F",
+    "textTertiary": "#4C4F69",
+    "tabSelected": "#E6E9EF",
+    "tabSelectedText": "#21223A",
+    "accent": "#033394",
+    "onAccent": "#EFF1F5",
+    "divider": "#CCD0DA",
+    "panelBorder": "#CCD0DA",
+    "selection": "#BDD0F5"
+  },
+  "dark": {
+    "panel": "#1E1E2E",
+    "card": "#181825",
+    "field": "#181825",
+    "textPrimary": "#DDE5FF",
+    "textTab": "#DDE5FF",
+    "textSecondary": "#BBC2DD",
+    "textTertiary": "#BAC2DE",
+    "tabSelected": "#181825",
+    "tabSelectedText": "#DDE5FF",
+    "accent": "#A1C5FE",
+    "onAccent": "#1E1E2E",
+    "divider": "#313244",
+    "panelBorder": "#313244",
+    "selection": "#313244"
+  }
+}

@@ -61,5 +61,5 @@
   },
   "hideThinkingBlock": false,
   "enablePluginTools": false,
-  "theme": "auto"
+  "theme": "auto:catppuccin-latte:catppuccin-mocha"
 }
