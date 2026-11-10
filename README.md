@@ -18,6 +18,8 @@ Sachin's Mac setup. **Private repo.** No secrets live here.
 | `claude/` | Claude Code settings + skills | `~/.claude/` |
 | `codex/` | Codex config | `~/.codex/` |
 | `zed/` | Zed editor | `~/.config/zed/` |
+| `ardia/` | Ardia browser (defaults kept; see `KEYBINDINGS.md`) | `~/.config/ardia/` |
+| `KEYBINDINGS.md` | keybinding philosophy: one dictionary, native entrance per app | repo only |
 | `cheatsheets/` | key cheat sheets | `~/.config/cheatsheets/` |
 | `Brewfile` | Homebrew packages | `brew bundle` |
 

@@ -22,6 +22,8 @@ DEFAULT KEYS (prefix Ctrl-Space)
   %  "           split side by side / top-bottom
   arrows, o       move between panes
   z               zoom pane / unzoom
+  b               hide / show the status bar (= sidebar in rex/herdr)
+  P               rename pane (asks for the name; rex/herdr: same key)
   x               kill pane (y to confirm)
   c               new window
   n  p            next / previous window

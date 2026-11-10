@@ -47,7 +47,8 @@ codex/config.toml                    .codex/config.toml
 codex/hooks.json                     .codex/hooks.json
 zed/settings.json                    .config/zed/settings.json
 zed/keymap.json                      .config/zed/keymap.json
-zed/tasks.json                       .config/zed/tasks.json
+zed/tasks.json                      .config/zed/tasks.json
+ardia/config.json                 .config/ardia/config.json
 cheatsheets                          .config/cheatsheets
 "
 

@@ -7,6 +7,24 @@ map("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file tree" })
 map("n", "<leader>t", "<cmd>NvimTreeToggle<cr>", { desc = "Show/hide file tree" })
 map("n", "<leader>e", "<cmd>NvimTreeFocus<cr>", { desc = "Focus file tree" })
 
+-- Layout (dictionary verbs via Space leader — same letters as herdr/rex
+-- prefix keys; see KEYBINDINGS.md. nvim tabpages are Views, not multiplexer
+-- tabs, so tab hop stays on ]t/[t and Tab/S-Tab above.)
+map("n", "<leader>b", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file tree (= prefix b sidebar)" })
+map("n", "<leader>v", "<cmd>vsplit<cr>", { desc = "Split right (= prefix v)" })
+map("n", "<leader>-", "<cmd>split<cr>", { desc = "Split down (= prefix -)" })
+-- Zoom toggle (= prefix z). Saves the tab layout, maximizes, restores back.
+map("n", "<leader>z", function()
+  if vim.t.zoomed then
+    vim.cmd(vim.t.zoom_restore or "")
+    vim.t.zoomed = false
+  else
+    vim.t.zoom_restore = vim.fn.winrestcmd()
+    vim.cmd("resize | vertical resize")
+    vim.t.zoomed = true
+  end
+end, { desc = "Zoom window (toggle)" })
+
 -- Saving
 map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save" })
 

@@ -1,0 +1,76 @@
+# Keybinding philosophy
+
+One dictionary of verbs, one entrance per app, defaults are law.
+Agreed 2026-11-10. Tool configs are the source of truth for *what*;
+this file is the *why*.
+
+## Law 1 — The Pyramid
+
+`Session > Tab > Pane > View > Buffer`. One letter moves exactly one tier.
+
+- **nvim tabpages are Views, not Tabs.** The multiplexer owns the Tab tier.
+  This kills the only true key conflict we had (`Tab` = next pane in
+  rex/herdr vs next tabpage in nvim): different tiers, never ambiguous
+  in context. Keep nvim tabpages near-zero; let the multiplexer own tabs.
+
+## Law 2 — One dictionary, native entrance per app
+
+The verbs and letters are fixed; only the *entrance* changes, and it is
+whatever the platform natively affords:
+
+| Entrance | Apps |
+|---|---|
+| `Ctrl-b` + letter (tmux also `Ctrl-Space`) | herdr, rex, tmux (prefix culture) |
+| `Cmd-b` + letter (alias leader) | rex only (thumb-friendly native path) |
+| `Space` + letter (leader), bare `Ctrl-` for movement | nvim |
+| `Cmd-Shift` + letter (gap-fill only) | Ardia (the only free layer macOS leaves) |
+| `Ctrl-x` + letter, context-mode bare letters | hoocode |
+
+Same letter ⇒ same verb, always.
+
+### The verb dictionary
+
+| Verb | Key | herdr | rex | tmux | nvim | Ardia |
+|---|---|---|---|---|---|---|
+| move focus | `h j k l` | prefix | prefix / Cmd-b | prefix | bare `Ctrl-` | — |
+| next/prev | `n` / `p` | prefix n/p | prefix n/p; direct `⇧⌘[/]`* | prefix n/p | `]t` / `[t`, `Tab` | shipped `⇧⌘]/[` |
+| sidebar/tree | `b` | prefix b | prefix b; native `Cmd-/` | prefix b (status bar) | `<leader>b` (+ `Ctrl-n` kept) | shipped `⌘S` / `⇧⌘L` |
+| split right/down | `v` / `-` | prefix | prefix | prefix (+ `%` `"` kept) | `<leader>v` / `<leader>-` | shipped `⌃⇧=` (open) |
+| new / close tab | `c` / `x` | prefix | prefix | prefix | `<leader>te` / `<leader>tx` | shipped `⌘T` / `⌘W` |
+| jump to slot | `1–9` | prefix | prefix; native `Cmd-1..9` | prefix | `<leader>t1..9` | shipped `⌘1–8` |
+| zoom | `z` | prefix | prefix | prefix | `<leader>z` (toggle) | — (no such verb) |
+| resize / equalize | `r` / `=` | prefix r | prefix r / `=` | `=` kept | `Ctrl-w =` native | — |
+| hop siblings | `[ ]` | — | prefix (prompts) | — | `]t [t` (tabs) | `⇧⌘[/]` (tabs) |
+| find / help | `/` `?` | prefix | prefix | prefix | native | shipped `⌘F` / menu |
+| rename | `shift+t/p` | ✓ | ✓ | — | — | menu only |
+| palette | `:` / `;` | — | prefix `;`, native `⇧⌘P` | — | — | shipped `⌘L` |
+
+\* rex's two direct binds mirror Ardia's *shipped* chords, chosen because
+Ardia's `⇧⌘J/K/B` are taken (Downloads / Close All Tabs / bookmarks bar).
+
+## Law 3 — Defaults are law
+
+An app's own defaults are never stolen; the spine only (a) fills genuine
+gaps and (b) adds aliases. Consequences, all deliberate:
+
+- **herdr: zero config.** Its untouched defaults *are* the dictionary —
+  the ideal state, and the reason the rex-beta fallback costs nothing.
+- **Ardia: zero rebinds.** Its shipped defaults already cover tabs, panes,
+  sidebar, palette, slots. Verified 2026-11-10 from `config.schema.json`.
+- **Never-steal list** (verified): `Cmd-L/K/T/W/D/F/R/1-9` in browsers,
+  `Cmd-;` (system spelling in text fields), `⇧⌘J/K/B/V` in Ardia,
+  `Cmd-K/D` in rex. Revisit only if an app reshuffles its defaults.
+- **Sidebar diverges by design**: rex `Cmd-/`, Ardia `⌘S`/`⇧⌘L`, TUI `prefix b`,
+  nvim `<leader>b`. Documented, not unified.
+
+## Cross-app notes
+
+- **Double-prefix sends a literal through** (rex: `ctrl+b>ctrl+b`; tmux:
+  double `Ctrl-Space`): hoocode's emacs `Ctrl-b/f` prompt editing costs one
+  extra keystroke, never a dead key. (Herdr: verify once — press
+  `Ctrl-b Ctrl-b` in a hoocode prompt; cursor should move left.)
+- **Cheat sheets, one per tool**: `tkeys` (tmux) · `hdkeys` (herdr TUI) ·
+  `rkeys` (rex) · `akeys` (ardia). Same table shape everywhere.
+- **Ardia verification basis**: `ardia config init` writes the schema;
+  `ardia config list` shows every default; the in-app `keyboardShortcuts`
+  page is authoritative. The table above reflects the 2026-11-10 schema.

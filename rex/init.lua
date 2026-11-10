@@ -7,6 +7,9 @@
 -- Ctrl-Space stays free so it reaches nvim completion directly.
 -- Press the prefix, let go, then the key. Escape cancels a half-typed prefix.
 -- Rex's own Cmd shortcuts (Cmd-D, Cmd-T, Cmd-1..9, Cmd-K …) still work.
+-- Two direct chords below mirror Ardia's shipped defaults (see KEYBINDINGS.md):
+-- Ardia hops tabs on Shift-Cmd-[ / ], and its J/K/B are taken (Downloads /
+-- Close All Tabs / bookmarks bar), so mirror its real chords, not J/K.
 --
 -- Check edits:  rex config check
 -- Apply live:   rex config reload
@@ -47,12 +50,21 @@ prefixed("tab", "pane.focus_next")
 prefixed("shift+tab", "pane.focus_previous")
 
 -- ── Pane actions ───────────────────────────────────────────
-prefixed("z", "pane.zoom")                 -- zoom / unzoom
+prefixed("z", "pane.zoom")                -- zoom / unzoom
+prefixed("shift+p", "pane.rename")        -- herdr/tmux: prefix P (same key)
 prefixed("x", "pane.close")                -- kill pane
 prefixed("f", "pane.float")                -- float pane
 prefixed("=", "pane.balance")              -- even out splits
 prefixed("shift+[", "pane.move", { direction = "left" })   -- tmux {
 prefixed("shift+]", "pane.move", { direction = "right" })  -- tmux }
+
+-- ── Native mirrors of Ardia's shipped chords ──────────────────
+-- Same chord, same verb in both native apps. Ardia ships tab hop on
+-- Shift-Cmd-[ / ] (previousTab/nextTab defaults), so rex binds them
+-- directly — both chords are free in rex's own Cmd set. No other direct
+-- chords: Cmd-b>letter already reaches the whole spine natively.
+rex.bind("cmd+shift+[", "client.tab.previous")
+rex.bind("cmd+shift+]", "client.tab.next")
 
 -- ── Resize ─────────────────────────────────────────────────
 -- tmux: prefix Ctrl-arrows (one step per press)

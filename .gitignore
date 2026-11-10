@@ -20,6 +20,9 @@
 !/codex/
 !/zed/
 !/cheatsheets/
+!/ardia/
+!/KEYBINDINGS.md
+!/PREFERENCES.md
 
 # Never track, even inside allowed folders
 .DS_Store

@@ -92,6 +92,9 @@ alias hoo='hoocode'
 alias ta='~/.config/tmux/scripts/agents'   # agent session for this folder
 alias tls='tmux ls'
 alias tkeys='less ~/.config/tmux/cheatsheet.txt'
+alias hdkeys='less ~/.config/cheatsheets/herdr-tui.txt'
+alias rkeys='less ~/.config/rex/cheatsheet.txt'
+alias akeys='less ~/.config/cheatsheets/ardia.txt'
 alias ad='agentdiff'                        # live diff pane
 alias vd='nvim -c DiffviewOpen'   # side-by-side review of all changes
 

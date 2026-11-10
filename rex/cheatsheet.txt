@@ -21,6 +21,7 @@ PANES
   f               float pane
   {  }            move pane left / right
   =               balance splits
+  P               rename this pane (herdr/tmux: same key)
   Ctrl-arrows     resize pane one step
   r               resize mode: arrows / h j k l
                   Shift = big steps, = balances
@@ -67,6 +68,7 @@ REX'S OWN CMD KEYS (no prefix)
   Shift-Cmd-P     command palette
   Cmd-F           find
   Cmd-/           toggle sidebar
+  Shift-Cmd-[ ]   previous / next tab (mirrors Ardia's shipped chords)
   Cmd-+  Cmd--  Cmd-0   font size
 
 
