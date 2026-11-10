@@ -1,12 +1,15 @@
 {
   "$schema": "./config.schema.json",
-  "theme": null,
+  "theme": "catppuccin",
   "settings": {
     "shortcuts": {
       "nextTab": "cmd+shift+j",
       "previousTab": "cmd+shift+k",
       "downloads": "",
-      "closeAllTabs": ""
+      "closeAllTabs": "",
+      "toggleSidebar": "cmd+b",
+      "focusCommandBar": "cmd+shift+p",
+      "keyboardShortcuts": "cmd+shift+/"
     }
   }
 }

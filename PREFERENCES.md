@@ -38,11 +38,18 @@ Agreed changes (not yet implemented):
   → `⇧⌘J/K`; `downloads`/`closeAllTabs` → unbound (menu-only). Ardia's
   schema allows one chord per command, so this replaces its shipped
   `⇧⌘[/]` + alternates — accepted: one chord, one verb, both native apps.
+- Ardia sidebar/palette/shortcuts (2026-11-10, one-muscle rule):
+  `toggleSidebar` → `⌘B` (Zed parity, spine letter `b`; replaces shipped
+  `⌘S`/`⇧⌘L`/`⇧⌘F`), `focusCommandBar` → `⇧⌘P` (one palette chord with rex;
+  user has no `⌘L` browser memory, so the loss is free), `keyboardShortcuts`
+  → `⇧⌘/` (`⌘?` Help convention; had no chord). `⇧⌘B` ruled out — ships as
+  bookmarks-bar toggle, stays untouched per Law 3.
   rex mirrors with the same two direct chords (verified free).
 - herdr/tmux/hoocode: zero changes. Verify herdr sends a literal Ctrl-b on
   double-prefix (emacs editing inside hoocode prompts).
-- Sidebar chord diverges between natives on purpose: rex `Cmd-/`, Ardia its own
-  default. Documented, not unified.
+- Sidebar is one letter (`b`) with each app's native entrance: TUI `prefix b`,
+  nvim `<leader>b`, Zed + Ardia bare `⌘B`, rex `Cmd-/` (bare `⌘B` impossible —
+  `Cmd-b` is its alias leader).
 
 ## Keybinding spine
 
@@ -51,6 +58,24 @@ Agreed changes (not yet implemented):
 
 ## Theme spine
 
-- Catppuccin Latte (light) / Mocha (dark), auto-following macOS appearance across ghostty, tmux, nvim, herdr, rex.
-- Kanagawa Dragon is an active trial across rex, nvim, hoocode (commit 2439fd1).
-- Ardia to join the spine via `ardia theme` + `appearance = auto` (discussion pending).
+- Catppuccin Latte AAA (light) / Mocha AAA (dark), auto-following macOS
+  appearance across ghostty, tmux, nvim, herdr, rex, hoocode, ardia.
+  Every text pair >= 7:1 (WCAG AAA); same hues, OKLCH lightness nudges
+  (method: `rex/themes/make_aaa.py`; role table: `/tmp/aaa_roles.py`
+  was ephemeral — values are versioned in `nvim/lua/plugins/ui.lua`,
+  `tmux/themes/`, `herdr/config.toml`).
+- Kanagawa Dragon trial ENDED 2026-11-10 (decision: Latte/Mocha AAA
+  everywhere). Removed: `rex/themes/Kanagawa Dragon AAA`,
+  `~/.hoocode/themes/kanagawa-dragon*.json`, nvim `kanagawa.nvim` lock
+  entry. Rex app library still lists an unselected Kanagawa entry
+  (no delete action; harmless).
+- ghostty: `ghostty/themes/` (AAA files) + `theme = light:…AAA,dark:…AAA`.
+- rex: native Light/Dark slots + Appearance=system; Latte AAA → light
+  slot, Mocha AAA → dark slot (assigned via import under each appearance).
+- herdr: closed theme list, so AAA rides as `[theme.custom.light]` /
+  `[theme.custom.dark]` overrides on the stock bases.
+- hoocode: `~/.hoocode/themes/catppuccin-{latte,mocha}.json` are AAA
+  (live-only, not in dotfiles); `settings.json` theme =
+  `auto:catppuccin-latte:catppuccin-mocha` so auto uses them.
+- ardia: `ardia/themes/catppuccin.json` (minimal role set, omitted roles
+  keep Ardia defaults); `appearance = auto` follows macOS.

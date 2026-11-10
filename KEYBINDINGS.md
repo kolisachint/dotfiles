@@ -34,7 +34,7 @@ Same letter ⇒ same verb, always.
 |---|---|---|---|---|---|---|
 | move focus | `h j k l` | prefix | prefix / Cmd-b | prefix | bare `Ctrl-` | — |
 | next/prev | `n` / `p` | prefix n/p | prefix n/p + direct `⇧⌘J/K`* | prefix n/p | `]t` / `[t`, `Tab` | custom `⇧⌘J/K` |
-| sidebar/tree | `b` | prefix b | prefix b; native `Cmd-/` | prefix b (status bar) | `<leader>b` (+ `Ctrl-n` kept) | shipped `⌘S` / `⇧⌘L` |
+| sidebar/tree | `b` | prefix b | prefix b; native `Cmd-/` | prefix b (status bar) | `<leader>b` (+ `Ctrl-n` kept) | custom `⌘B` (= Zed default; bare `⌘B` impossible in rex, `Cmd-b` is its leader) |
 | split right/down | `v` / `-` | prefix | prefix | prefix (+ `%` `"` kept) | `<leader>v` / `<leader>-` | shipped `⌃⇧=` (open) |
 | new / close tab | `c` / `x` | prefix | prefix | prefix | `<leader>te` / `<leader>tx` | shipped `⌘T` / `⌘W` |
 | jump to slot | `1–9` | prefix | prefix; native `Cmd-1..9` | prefix | `<leader>t1..9` | shipped `⌘1–8` |
@@ -43,7 +43,7 @@ Same letter ⇒ same verb, always.
 | hop siblings | `[ ]` | — | prefix (prompts) | — | `]t [t` (tabs) | `⇧⌘[/]` (tabs) |
 | find / help | `/` `?` | prefix | prefix | prefix | native | shipped `⌘F` / menu |
 | rename | `shift+t/p` | ✓ | ✓ | — | — | menu only |
-| palette | `:` / `;` | — | prefix `;`, native `⇧⌘P` | — | — | shipped `⌘L` |
+| palette | `:` / `;` | — | prefix `;`, native `⇧⌘P` | — | — | custom `⇧⌘P` (was `⌘L`; one chord per command, `⌃F5` alternate also gone) |
 
 \* rex's two direct binds mirror Ardia's *custom* chords: `nextTab`/`previousTab`
 are rebound to `⇧⌘J/K` (their defaults `⇧⌘J/K` = Downloads / Close All
@@ -58,15 +58,20 @@ gaps and (b) adds aliases. Consequences, all deliberate:
 
 - **herdr: zero config.** Its untouched defaults *are* the dictionary —
   the ideal state, and the reason the rex-beta fallback costs nothing.
-- **Ardia: 4 custom entries.** `nextTab`/`previousTab` → `⇧⌘J/K`;
-  `downloads`/`closeAllTabs` → unbound (menu-only). Everything else default.
+- **Ardia: 7 custom entries.** `nextTab`/`previousTab` → `⇧⌘J/K`;
+  `downloads`/`closeAllTabs` → unbound (menu-only); `toggleSidebar` → `⌘B`
+  (Zed parity, spine letter `b`; replaces shipped `⌘S`/`⇧⌘L`/`⇧⌘F`);
+  `focusCommandBar` → `⇧⌘P` (one palette chord with rex; replaces `⌘L`/`⌃F5`);
+  `keyboardShortcuts` → `⇧⌘/` (`⌘?`, Help convention; had no chord).
+  Everything else default. `⇧⌘B` stays untouched (bookmarks-bar toggle).
   Verified 2026-11-10 from `config.schema.json`; `ardia config check` clean.
 - **Never-steal list** (verified): `Cmd-L/K/T/W/D/F/R/1-9` in browsers,
   `Cmd-;` (system spelling in text fields), `⇧⌘J/K/B/V` in Ardia,
   `Cmd-K/D` in rex. `⇧⌘J/K` are now *ours* in Ardia (rebound); `⇧⌘B/V`
   and `Cmd-;` stay untouched. Revisit only if an app reshuffles defaults.
-- **Sidebar diverges by design**: rex `Cmd-/`, Ardia `⌘S`/`⇧⌘L`, TUI `prefix b`,
-  nvim `<leader>b`. Documented, not unified.
+- **Sidebar is one letter (`b`), native entrance per app**: TUI `prefix b`,
+  nvim `<leader>b`, Zed + Ardia bare `⌘B`, rex `Cmd-/` (its `Cmd-b` slot is
+  the alias leader, so bare `⌘B` is impossible there).
 
 ## Cross-app notes
 
