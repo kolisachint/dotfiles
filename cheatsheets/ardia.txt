@@ -1,9 +1,9 @@
-ARDIA KEYS — app defaults, nothing rebound   (q closes this)
+ARDIA KEYS — 4 custom chords, rest is default   (q closes this)
 =========================================================
 
 Command bar: Cmd-L.  Tabs live in the sidebar (vertical: j = down = next).
 Same chord does the same thing here and in rex:
-  Shift-Cmd-[ / ]  previous / next tab   (rex: direct bind, same chords)
+  Shift-Cmd-J / K  next / previous tab   (rebound — see below)
 Full list anytime: the keyboardShortcuts page in Ardia's menu.
 
 In a shell: akeys shows this sheet.
@@ -18,49 +18,52 @@ START / LEAVE
   Cmd-Q            quit
 
 
-TABS
-----
-  Shift-Cmd-[ ]    previous / next tab  (= spine n / p)
-                     also: Cmd-{ / Cmd-}, Opt-Cmd-arrows, Ctrl-PgUp/PgDn
+TABS  (the spine's n / p, via Cmd-Shift)
+----------------------------------------
+  Shift-Cmd-J K    next / previous tab
   Cmd-1..8         go to tab   (Cmd-9: last tab; rex: same)
   Cmd-L            command bar / address
   Shift-Cmd-A      search tabs
   rename tab       in the menu only (no free chord — left unbound on purpose)
 
+Rebound from Ardia's defaults on purpose:
+  defaults were Shift-Cmd-[ / ] (+ Cmd-{/}, Opt-Cmd-arrows, Ctrl-PgUp/Dn).
+  One chord per command in Ardia's schema, so the rebound REPLACES them.
+  Cost accepted for one chord / one verb in both native apps.
 
-SPLIT PANES
------------
+
+SPLIT PANES  (defaults kept)
+----------------------------
   Ctrl-Shift-=      open split pane
   Ctrl-Shift-[ ]    focus previous / next split pane  (= spine o)
   Ctrl-Cmd-W        close split group
 
 
-SIDEBAR
--------
+SIDEBAR  (defaults kept)
+------------------------
   Cmd-S            auto-hide tabs (sidebar toggle)
   Shift-Cmd-L      same   (Shift-Cmd-B is bookmarks bar — not stolen)
   Shift-Cmd-S      show tabs in sidebar
 
 
-FIND / MOVE
------------
+FIND / MOVE  (defaults kept)
+----------------------------
   Cmd-F            find…   (Cmd-G / Shift-Cmd-G: next / previous)
   Cmd-[  Cmd-]     back / forward
   Cmd-R            refresh   (Shift-Cmd-R: force refresh)
 
 
-WHY J/K AREN'T TAB KEYS HERE
-----------------------------
-  Shift-Cmd-J      Downloads (default — do not steal)
-  Shift-Cmd-K      Close All Tabs (default — do not steal)
-  Cmd-L            command bar (default, not address bar)
-  Cmd-;            system spelling panel inside text fields
+MENU-ONLY (unbound to free J/K)
+-------------------------------
+  Downloads        was Shift-Cmd-J → menu only
+  Close All Tabs   was Shift-Cmd-K → menu only (safer without a chord)
 
 
 CONFIG  (dotfiles: ardia/config.json)
 -------------------------------------
-  ~/.config/ardia/config.json     keys (currently: none, all default)
-  ardia config set settings.SHORTCUT.Value   check + write one chord
+  ~/.config/ardia/config.json     keys: 2 binds + 2 unbinds (rest default)
+  ardia config set shortcuts.ID CHORD   check + write one chord
+  ardia config set shortcuts.ID '""'    unbind to menu-only
   ardia config check              check config.json against the schema
   ardia config list               every setting + its default
   ardia theme use NAME            switch theme (Catppuccin spine: later)

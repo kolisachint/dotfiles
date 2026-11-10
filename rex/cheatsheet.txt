@@ -68,7 +68,7 @@ REX'S OWN CMD KEYS (no prefix)
   Shift-Cmd-P     command palette
   Cmd-F           find
   Cmd-/           toggle sidebar
-  Shift-Cmd-[ ]   previous / next tab (mirrors Ardia's shipped chords)
+  Shift-Cmd-J K   next / previous tab (mirrors Ardia's custom chords)
   Cmd-+  Cmd--  Cmd-0   font size
 
 

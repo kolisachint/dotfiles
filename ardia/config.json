@@ -1,5 +1,12 @@
 {
   "$schema": "./config.schema.json",
   "theme": null,
-  "settings": {}
+  "settings": {
+    "shortcuts": {
+      "nextTab": "cmd+shift+j",
+      "previousTab": "cmd+shift+k",
+      "downloads": "",
+      "closeAllTabs": ""
+    }
+  }
 }

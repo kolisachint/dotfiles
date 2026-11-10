@@ -34,12 +34,11 @@ Agreed changes (not yet implemented):
   native set already covers Cmd-T/W/1..9/D/K/F, Shift-Cmd-D/Enter/P, Cmd-/).
 - nvim: aliases `<leader>b` (tree), `<leader>v`/`<leader>-` (splits),
   `<leader>z` (zoom toggle). Keep `<C-n>` tree binding as well.
-- Ardia: **zero rebinds.** Its shipped defaults already cover the dictionary:
-  tab hop `⇧⌘[/]`, split panes `⌃⇧[//=]`, sidebar `⌘S/⇧⌘L`, command bar
-  `⌘L`, tabs `⌘1–8`. (`⇧⌘J/K/B` are taken there by Downloads / Close All
-  Tabs / bookmarks bar, so the planned J/K mirror was dropped — Law 3.)
-  Rename-tab stays in the menu (no free chord). If Ardia reshuffles defaults
-  in an update, revisit — costs one or two binds at most.
+- Ardia: **J/K swap (decided after schema probe).** `nextTab`/`previousTab`
+  → `⇧⌘J/K`; `downloads`/`closeAllTabs` → unbound (menu-only). Ardia's
+  schema allows one chord per command, so this replaces its shipped
+  `⇧⌘[/]` + alternates — accepted: one chord, one verb, both native apps.
+  rex mirrors with the same two direct chords (verified free).
 - herdr/tmux/hoocode: zero changes. Verify herdr sends a literal Ctrl-b on
   double-prefix (emacs editing inside hoocode prompts).
 - Sidebar chord diverges between natives on purpose: rex `Cmd-/`, Ardia its own

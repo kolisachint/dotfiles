@@ -33,7 +33,7 @@ Same letter ⇒ same verb, always.
 | Verb | Key | herdr | rex | tmux | nvim | Ardia |
 |---|---|---|---|---|---|---|
 | move focus | `h j k l` | prefix | prefix / Cmd-b | prefix | bare `Ctrl-` | — |
-| next/prev | `n` / `p` | prefix n/p | prefix n/p; direct `⇧⌘[/]`* | prefix n/p | `]t` / `[t`, `Tab` | shipped `⇧⌘]/[` |
+| next/prev | `n` / `p` | prefix n/p | prefix n/p + direct `⇧⌘J/K`* | prefix n/p | `]t` / `[t`, `Tab` | custom `⇧⌘J/K` |
 | sidebar/tree | `b` | prefix b | prefix b; native `Cmd-/` | prefix b (status bar) | `<leader>b` (+ `Ctrl-n` kept) | shipped `⌘S` / `⇧⌘L` |
 | split right/down | `v` / `-` | prefix | prefix | prefix (+ `%` `"` kept) | `<leader>v` / `<leader>-` | shipped `⌃⇧=` (open) |
 | new / close tab | `c` / `x` | prefix | prefix | prefix | `<leader>te` / `<leader>tx` | shipped `⌘T` / `⌘W` |
@@ -45,8 +45,11 @@ Same letter ⇒ same verb, always.
 | rename | `shift+t/p` | ✓ | ✓ | — | — | menu only |
 | palette | `:` / `;` | — | prefix `;`, native `⇧⌘P` | — | — | shipped `⌘L` |
 
-\* rex's two direct binds mirror Ardia's *shipped* chords, chosen because
-Ardia's `⇧⌘J/K/B` are taken (Downloads / Close All Tabs / bookmarks bar).
+\* rex's two direct binds mirror Ardia's *custom* chords: `nextTab`/`previousTab`
+are rebound to `⇧⌘J/K` (their defaults `⇧⌘J/K` = Downloads / Close All
+Tabs were unbound to menu-only). One chord per command in Ardia's schema,
+so the rebound replaces its shipped `⇧⌘[/]` + alternates — accepted cost
+for one chord / one verb in both native apps.
 
 ## Law 3 — Defaults are law
 
@@ -55,11 +58,13 @@ gaps and (b) adds aliases. Consequences, all deliberate:
 
 - **herdr: zero config.** Its untouched defaults *are* the dictionary —
   the ideal state, and the reason the rex-beta fallback costs nothing.
-- **Ardia: zero rebinds.** Its shipped defaults already cover tabs, panes,
-  sidebar, palette, slots. Verified 2026-11-10 from `config.schema.json`.
+- **Ardia: 4 custom entries.** `nextTab`/`previousTab` → `⇧⌘J/K`;
+  `downloads`/`closeAllTabs` → unbound (menu-only). Everything else default.
+  Verified 2026-11-10 from `config.schema.json`; `ardia config check` clean.
 - **Never-steal list** (verified): `Cmd-L/K/T/W/D/F/R/1-9` in browsers,
   `Cmd-;` (system spelling in text fields), `⇧⌘J/K/B/V` in Ardia,
-  `Cmd-K/D` in rex. Revisit only if an app reshuffles its defaults.
+  `Cmd-K/D` in rex. `⇧⌘J/K` are now *ours* in Ardia (rebound); `⇧⌘B/V`
+  and `Cmd-;` stay untouched. Revisit only if an app reshuffles defaults.
 - **Sidebar diverges by design**: rex `Cmd-/`, Ardia `⌘S`/`⇧⌘L`, TUI `prefix b`,
   nvim `<leader>b`. Documented, not unified.
 
