@@ -2,14 +2,12 @@
 return {
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
-  -- Catppuccin Latte (day) / Mocha (night): kept installed as fallback.
-  -- Was: follows macOS appearance via apply_system_theme. Parked while
-  -- trying Kanagawa Dragon. Revert: set lazy = false here, remove the
-  -- kanagawa spec below, and restore the FocusGained/timer re-check.
+  -- Catppuccin Latte (day) / Mocha (night): follows macOS appearance.
+  -- apply_system_theme re-checks on FocusGained and every 60s (same as hoocode).
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    lazy = true,
+    lazy = false,
     priority = 1000,
     config = function()
       require("catppuccin").setup({
@@ -29,47 +27,21 @@ return {
           snacks = { enabled = true },
         },
       })
-    end,
-  },
-
-  -- Kanagawa Dragon (trial): fixed dark theme from rebelot/kanagawa.nvim
-  -- https://github.com/rebelot/kanagawa.nvim
-  {
-    "rebelot/kanagawa.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require("kanagawa").setup({
-        theme = "dragon",
-        background = { dark = "dragon", light = "dragon" },
-        commentStyle = { italic = true },
-        keywordStyle = { italic = true },
-        statementStyle = { bold = true },
-        terminalColors = true,
-        -- Hybrid contrast: AAA (>= 7:1) for code + diagnostics, stock
-        -- Dragon dull for comments + punctuation (dull by design).
-        -- Same OKLCH hues as stock (mirrors rex + hoocode themes).
-        -- Revert: delete this colors block.
-        colors = {
-          palette = {
-            -- dragonAsh (comments, 4.17:1) and dragonGray2 (punctuation)
-            -- deliberately left stock: dull by design.
-            dragonGreen2 = "#a9ba99", -- strings  (was #8a9a7b)
-            dragonBlue2 = "#9fb9c5", -- functions (was #8ba4b0)
-            dragonViolet = "#c1cce1", -- keywords (was #8992a7)
-            dragonAqua = "#a2b9b6", -- types     (was #8ea4a2)
-            dragonPink = "#c0b0c1", -- numbers   (was #a292a3)
-            dragonRed = "#f39f97", -- operators  (was #c4746e)
-            dragonOrange = "#d2ad95", -- constants (was #b6927b)
-            dragonTeal = "#98a3b9", -- specials  (was #949fb5)
-            dragonBlue = "#86a8b7", -- diag info (was #658594)
-            waveAqua1 = "#80ac9f", -- diag hint  (was #6a9589)
-            samuraiRed = "#fc7d6f", -- diag error (was #e82424)
-          },
-        },
-      })
-      vim.o.background = "dark"
-      vim.cmd("colorscheme kanagawa-dragon")
+      local function apply_system_theme(force)
+        local out = vim.fn.system("defaults read -g AppleInterfaceStyle 2>/dev/null")
+        local bg = out:match("Dark") and "dark" or "light"
+        -- Only repaint on an actual change (avoids flicker on every poll)
+        if force ~= true and vim.o.background == bg then return end
+        vim.o.background = bg
+        vim.cmd("colorscheme catppuccin")
+      end
+      apply_system_theme(true)
+      -- Re-check when Neovim regains focus and every 60s (same as hoocode)
+      vim.api.nvim_create_autocmd("FocusGained", { callback = function() apply_system_theme() end })
+      local timer = vim.uv.new_timer()
+      if timer then
+        timer:start(60000, 60000, vim.schedule_wrap(function() apply_system_theme() end))
+      end
     end,
   },
 

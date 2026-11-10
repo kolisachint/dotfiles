@@ -4,8 +4,20 @@ local au = vim.api.nvim_create_autocmd
 -- checktime compares each open buffer with its file on disk. Run it when focus
 -- or the buffer changes, and every 2 s. Never while typing a command, so it
 -- does not interrupt the cmdline.
+local function in_diffview()
+  if package.loaded["diffview.lib"] then
+    local ok, view = pcall(function() return require("diffview.lib").get_current_view() end)
+    if ok and view then return true end
+  end
+  -- Diffview buffers outside the view tab (file panel, log): checktime
+  -- and reloads disturb the async layout mid-open.
+  local ft = vim.bo.filetype
+  return ft == "DiffviewFiles" or ft == "DiffviewFileHistory"
+end
+
 local function safe_checktime()
   if vim.fn.mode() == "c" or vim.fn.getcmdwintype() ~= "" then return end
+  if in_diffview() then return end
   vim.cmd("checktime")
 end
 au({ "FocusGained", "BufEnter", "CursorHold", "TermLeave" }, { callback = safe_checktime })
@@ -22,9 +34,16 @@ end
 
 -- While a diffview tab is open, refresh its file list every 3 s (and on focus)
 -- so files changed by an AI agent show up. Only runs when diffview is loaded.
+-- Debounced: a refresh rebuilds the async layout, so firing one while a view
+-- is still opening races it ("Invalid window id" from load_null_buffer in
+-- the <leader>gd crash). Minimum 5 s between refreshes.
+local last_dv_refresh = 0
 local function diffview_refresh()
   if vim.fn.mode():match("^[ic]") or vim.fn.getcmdwintype() ~= "" then return end
   if not package.loaded["diffview.lib"] then return end
+  local now = vim.uv.now()
+  if now - last_dv_refresh < 5000 then return end
+  last_dv_refresh = now
   local ok, view = pcall(function() return require("diffview.lib").get_current_view() end)
   if ok and view then pcall(vim.cmd, "DiffviewRefresh") end
 end

@@ -58,7 +58,22 @@ return {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diff all changes" },
+      {
+        "<leader>gd",
+        function()
+          -- Idempotent open: firing DiffviewOpen while a view is already
+          -- opening races the async layout ("Invalid window id" from
+          -- load_null_buffer). Close first, then reopen on the next tick.
+          local ok, lib = pcall(require, "diffview.lib")
+          if ok and lib.get_current_view() then
+            vim.cmd("DiffviewClose")
+            vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 50)
+          else
+            vim.cmd("DiffviewOpen")
+          end
+        end,
+        desc = "Diff all changes",
+      },
       {
         "<leader>gv",
         function()
@@ -74,10 +89,23 @@ return {
       {
         "<leader>gD",
         function()
-          local main = vim.fn.systemlist("git rev-parse --verify --quiet main")[1] and "main" or "master"
-          vim.cmd("DiffviewOpen " .. main .. "...HEAD")
+          -- Diff the merge-base of the current branch against HEAD, so the
+          -- review shows only this branch's changes.
+          local base = vim.fn.system({ "git", "merge-base", "HEAD", "main" })
+          if vim.v.shell_error ~= 0 then
+            base = vim.fn.system({ "git", "merge-base", "HEAD", "master" })
+          end
+          if vim.v.shell_error ~= 0 then
+            vim.notify("No main or master branch found", vim.log.levels.ERROR)
+            return
+          end
+          base = vim.trim(base)
+          -- Same idempotent open as <leader>gd: never stack two opens.
+          local ok, lib = pcall(require, "diffview.lib")
+          if ok and lib.get_current_view() then vim.cmd("DiffviewClose") end
+          vim.defer_fn(function() vim.cmd("DiffviewOpen " .. base .. "...HEAD") end, 50)
         end,
-        desc = "Diff against main branch",
+        desc = "Diff this branch vs main",
       },
       { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "History of this file" },
       { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "History of the repo" },
@@ -98,6 +126,10 @@ return {
         -- Both sides scroll together (scrollbind + cursorbind, mouse wheel too).
         -- No soft wrap or folds, so the two panes stay the same height and line up.
         diff_buf_win_enter = function(_, winid)
+          -- Guard validity: this hook can fire while diffview is tearing
+          -- a layout down, and indexing a dead window throws the same
+          -- class of "Invalid window id" error as the <leader>gd crash.
+          if not vim.api.nvim_win_is_valid(winid) then return end
           local wo = vim.wo[winid]
           wo.scrollbind = true
           wo.cursorbind = true
