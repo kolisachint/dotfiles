@@ -64,6 +64,14 @@ Agreed changes (not yet implemented):
   (method: `rex/themes/make_aaa.py`; role table: `/tmp/aaa_roles.py`
   was ephemeral — values are versioned in `nvim/lua/plugins/ui.lua`,
   `tmux/themes/`, `herdr/config.toml`).
+  Dim hierarchy is tiered, not flat (shot B, max separation, 2026-11-10):
+  text 13 / subtext1 11 / subtext0 9.5 / overlay2 8 / overlay1 7.4 /
+  overlay0 7.1 (all vs surface0), so dimmed text stays visibly dimmer
+  yet AAA. Task bands are saturated just enough to read as distinct
+  (latte tints vs pane >= 1.12:1) with text >= 11:1.
+  NOTE: hoocode theme JSON cannot carry comments (`additionalProperties:
+  false` in defaults/theme-schema.json, serde_json is strict) — rationale
+  lives here, not in the theme files.
 - Kanagawa Dragon trial ENDED 2026-11-10 (decision: Latte/Mocha AAA
   everywhere). Removed: `rex/themes/Kanagawa Dragon AAA`,
   `~/.hoocode/themes/kanagawa-dragon*.json`, nvim `kanagawa.nvim` lock
