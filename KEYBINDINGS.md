@@ -73,6 +73,27 @@ gaps and (b) adds aliases. Consequences, all deliberate:
   nvim `<leader>b`, Zed + Ardia bare `⌘B`, rex `Cmd-/` (its `Cmd-b` slot is
   the alias leader, so bare `⌘B` is impossible there).
 
+## Global layer — app jumps (above every app)
+
+`⇧⌘1/2/3` jump to the three most-used apps from anywhere. Owned by
+Apple Shortcuts, not by any app config: shortcut files can't carry their
+global hotkey, so each chord is assigned by hand in the Shortcuts app
+and can't be version-controlled. `⇧⌘4` stays free on purpose (see below).
+
+| Chord | App | Shortcut name |
+|---|---|---|
+| `⇧⌘1` | Ardia | Focus Ardia |
+| `⇧⌘2` | Rex Beta | Focus Rex |
+| `⇧⌘3` | System Settings | Focus Settings |
+
+Rules for this layer: a global chord must be free in *every* app's
+default set (Law 3 applied machine-wide). Numbers were free except one
+collision: **`⇧⌘3` ships as fullscreen-screenshot** (and `⇧⌘4` as
+selection-screenshot), so taking `⇧⌘3` means turning off or rebinding
+that screenshot chord in System Settings → Keyboard → Keyboard
+Shortcuts → Screenshots. `⇧⌘4` is left unmapped so screenshots keep one
+native chord; claim it only if selection-screenshots get rebound too.
+
 ## Cross-app notes
 
 - **Double-prefix sends a literal through** (rex: `ctrl+b>ctrl+b`; tmux:
