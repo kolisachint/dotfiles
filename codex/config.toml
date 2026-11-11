@@ -78,5 +78,8 @@ trust_level = "trusted"
 [projects."/Users/sachinkoli/github/hoobot"]
 trust_level = "trusted"
 
+[projects."/Users/sachinkoli/github/noteapp"]
+trust_level = "trusted"
+
 [features]
 hooks = true
